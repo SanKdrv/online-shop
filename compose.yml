@@ -1,0 +1,53 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NGINX_CONF: ${NGINX_CONF}
+    ports:
+      - '80:80'
+      - "443:443"
+    volumes:
+      - ./frontend/ssl:/etc/nginx/ssl
+
+  backend:
+    build:
+      context: ./backend
+      args:
+        CONFIG: ${CONFIG}
+    ports:
+      - '8082:8082'
+      - '8443:8443'
+    volumes:
+      - ./frontend/ssl:/etc/nginx/ssl
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=
+      - DB_PORT=
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=
+      - DB_SSLMODE=disable
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    ports:
+      - '5436:5432'
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+#  docker-compose --env-file .env up --build          // local
+#  docker-compose --env-file .env.prod up --build     // prod

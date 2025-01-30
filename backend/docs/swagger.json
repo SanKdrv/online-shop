@@ -1,0 +1,100 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API server for stream service application",
+    "title": "Stream Service Prototype API",
+    "contact": {},
+    "version": "1.0"
+  },
+  "host": "localhost:8082",
+  "basePath": "/",
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "description": "Authenticates user and returns a JWT token",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "parameters": [
+          {
+            "description": "Login request",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/login.Request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/login.MergedResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "login.MergedResponse": {
+      "description": "Ответ после успешного логина",
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/definitions/response.Response"
+        }
+      }
+    },
+    "login.Request": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "response.Response": {
+      "description": "Добавляется в ответы сервера",
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

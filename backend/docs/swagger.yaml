@@ -1,0 +1,66 @@
+basePath: /
+definitions:
+  login.MergedResponse:
+    description: Ответ после успешного логина
+    properties:
+      access_token:
+        type: string
+      response:
+        $ref: '#/definitions/response.Response'
+    type: object
+  login.Request:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  response.Response:
+    description: Добавляется в ответы сервера
+    properties:
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact: {}
+  description: API server for stream service application
+  title: Stream Service Prototype API
+  version: "1.0"
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+        - application/json
+      description: Authenticates user and returns a JWT token
+      parameters:
+        - description: Login request
+          in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/login.Request'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/login.MergedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login
+      tags:
+        - Auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

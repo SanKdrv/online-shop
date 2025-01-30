@@ -1,0 +1,27 @@
+env: "local"
+
+db:
+  username: "postgres"
+  host: "db"
+  port: ""
+  dbname: ""
+  sslmode: "disable"
+  password: ""
+
+http_server:
+  address: "0.0.0.0:8082"
+  timeout: 4s
+  idle_timeout: 60s
+  cert_file: "/etc/ssl/certificate.crt"
+  key_file: "/etc/ssl/private.key"
+
+cors_origin:
+  - "http://localhost"
+
+cache:
+  ttl: 3600s
+
+auth:
+  access_token_ttl: 2m
+  refresh_token_ttl: 6m
+  jwt_secret: "xxxxxxx" # TODO: Вынести
