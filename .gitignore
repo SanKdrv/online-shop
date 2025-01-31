@@ -21,4 +21,4 @@
 go.work
 
 
-./backend/ssl/
+./backend/ssl/*
