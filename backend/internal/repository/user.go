@@ -36,3 +36,9 @@ func (r *UsersRepo) GetUserByEmail(email, password string) (domain.User, error) 
 	err := r.db.Where("email = ? AND password_hash = ?", email, password).First(&user).Error
 	return user, err
 }
+
+func (r *UsersRepo) GetUsernameByID(id int64) (string, error) {
+	var username string
+	err := r.db.Where("id = ?", id).First(&username).Error
+	return username, err
+}

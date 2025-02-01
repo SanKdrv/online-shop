@@ -19,8 +19,10 @@ type RefreshTokensRequest = types.RefreshTokensRequest
 type SignInRequest = types.SignInRequest
 type SignUpRequest = types.SignUpRequest
 type SignOutRequest = types.SignOutRequest
-
 type Response = types.Response
+
+type GetUsernameByIDRequest = types.GetUsernameByIDRequest
+type GetUsernameByIDResponse = types.GetUsernameByIDResponse
 
 // TODO: добавить разлогинирование при появлении более 5 различных подключений одного пользователя
 // @Summary Sign In
@@ -260,6 +262,47 @@ func (h *Handler) signOut(log *slog.Logger) http.HandlerFunc {
 
 		render.JSON(w, r, map[string]interface{}{
 			"status": response.StatusOK,
+		})
+	}
+}
+
+// @Summary GetUsernameByID
+// @Tags User
+// @Description get username by user id
+// @ID get-username-by-id
+// @Accept  json
+// @Produce  json
+// @Param input body GetUsernameByIDRequest true "Возвращает имя пользователя по user id"
+// @Success 200 {object} GetUsernameByIDResponse
+// @Failure 400,404 {object} GetUsernameByIDResponse
+// @Failure 500 {object} GetUsernameByIDResponse
+// @Failure default {object} GetUsernameByIDResponse
+// @Router /api/auth/get-username-by-id [post]
+func (h *Handler) getUsernameByID(log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "routes.user.getUsernameByID"
+
+		log = log.With(
+			slog.String("op", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		var req GetUsernameByIDRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Error("failed to decode request body", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Invalid request body"))
+			return
+		}
+
+		username, err := h.services.Users.GetUsernameByID(req.UserID)
+		if err != nil {
+			log.Error("failed to get username by id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		render.JSON(w, r, GetUsernameByIDResponse{
+			Username: username,
 		})
 	}
 }

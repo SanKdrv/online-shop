@@ -14,6 +14,7 @@ type Users interface {
 	GenerateToken(username, password string) (string, error)
 	ParseToken(token string) (int, error)
 	VerifyUser(identifier, password, verifyBy string) (domain.User, error)
+	GetUsernameByID(userID int64) (string, error)
 }
 
 type RefreshSession interface {

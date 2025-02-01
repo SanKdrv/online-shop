@@ -44,3 +44,11 @@ type Response struct {
 	Status       string `json:"status,omitempty"`
 	Error        string `json:"error,omitempty"`
 }
+
+type GetUsernameByIDRequest struct {
+	UserID int64 `json:"user_id"`
+}
+
+type GetUsernameByIDResponse struct {
+	Username string `json:"username"`
+}

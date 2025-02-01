@@ -9,6 +9,7 @@ type Users interface {
 	GetUserByUsername(username, password string) (domain.User, error)
 	GetUserByEmail(username, password string) (domain.User, error)
 	CreateUser(user domain.User) (int64, error)
+	GetUsernameByID(userID int64) (string, error)
 }
 
 type RefreshSession interface {

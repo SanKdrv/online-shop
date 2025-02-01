@@ -40,6 +40,10 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 			r.Post("/sign-out", h.signOut(log))
 		})
 
+		// User
+		r.Route("/user", func(r chi.Router) {
+			r.Post("/get-username-by-id", h.getUsernameByID(log))
+		})
 		//r.Use(middleware.UserIdentity(log, cfg)) // Пример мидлвэра аутентификации
 	})
 
