@@ -1,16 +1,19 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      args:
-        NGINX_CONF: ${NGINX_CONF}
-    ports:
-      - '80:80'
-      - "443:443"
-    volumes:
-      - ./frontend/ssl:/etc/nginx/ssl
+#  frontend:
+#    env_file: .env.dev
+#    build:
+#      context: ./frontend
+#      args:
+#        NGINX_CONF: ${NGINX_CONF}
+#    ports:
+#      - '80:80'
+#      - "443:443"
+#    volumes:
+#      - ./frontend/ssl:/etc/nginx/ssl
 
   backend:
+    env_file:
+      - .env.dev
     build:
       context: ./backend
       args:
@@ -23,13 +26,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      - DB_HOST=
-      - DB_PORT=
-      - DB_USER=
-      - DB_PASSWORD=
-      - DB_NAME=
-      - DB_SSLMODE=disable
+#    environment:
+#      - DB_HOST=${POSTGRES_HOST}
+#      - DB_PORT=${POSTGRES_PORT}
+#      - DB_USER=${POSTGRES_USERNAME}
+#      - DB_PASSWORD=${POSTGRES_PASSWORD}
+#      - DB_NAME=${POSTGRES_DBNAME}
+#      - DB_SSLMODE=${POSTGRES_SSLMODE}
 
   db:
     restart: always
@@ -37,13 +40,13 @@ services:
     volumes:
       - ./.database/postgres/data:/var/lib/postgresql/data
     ports:
-      - '5436:5432'
+      - '${PC_POSTGRES_PORT}:${POSTGRES_PORT}'
     environment:
-      POSTGRES_USER:
-      POSTGRES_PASSWORD:
-      POSTGRES_DB:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DBNAME}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME}" ]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -22,3 +22,4 @@ go.work
 
 backend/ssl/
 .env
+.env.dev

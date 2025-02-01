@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Env string `yaml:"env" env-default:"local"`
 	//StoragePath string     `yaml:"storage_path" env-required:"true"`
-	DB         DB         `yaml:"db"`
+	DB         DB
 	HTTPServer HTTPServer `yaml:"http_server"`
 	CorsOrigin []string   `yaml:"cors_origin" env-required:"true"`
 	Cache      Cache      `yaml:"cache"`
@@ -18,12 +18,12 @@ type Config struct {
 }
 
 type DB struct {
-	Host     string `yaml:"host" env-required:"true"`
-	Username string `yaml:"username" env-required:"true"`
-	Port     string `yaml:"port" env-required:"true"`
-	DBName   string `yaml:"dbname" env-required:"true"`
-	SSLMode  string `yaml:"sslmode" env-required:"true"`
-	Password string `yaml:"password" env-required:"true"`
+	Host     string `env:"POSTGRES_HOST" env-required:"true"`
+	Username string `env:"POSTGRES_USERNAME" env-required:"true"`
+	Port     string `env:"POSTGRES_PORT" env-required:"true"`
+	DBName   string `env:"POSTGRES_DBNAME" env-required:"true"`
+	SSLMode  string `env:"POSTGRES_SSLMODE" env-required:"true"`
+	Password string `env:"POSTGRES_PASSWORD" env-required:"true"`
 }
 
 type Cache struct {
@@ -33,7 +33,7 @@ type Cache struct {
 type Auth struct {
 	AccessTokenTTL  time.Duration `yaml:"access_token_ttl" env-default:"15m"` // Длительность жизни аccessTokenTTL
 	RefreshTokenTTL time.Duration `yaml:"refresh_token_ttl" env-default:"24h"`
-	JWTSecret       string        `yaml:"jwt_secret" env-required:"true"`
+	JWTSecret       string        `env:"AUTH_JWT_SECRET" env-required:"true"`
 }
 
 type HTTPServer struct {
@@ -55,6 +55,9 @@ func MustLoad() Config {
 
 	var cfg Config
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
+		log.Fatalf("cannot read config: %v", err)
+	}
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
 		log.Fatalf("cannot read config: %v", err)
 	}
 

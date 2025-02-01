@@ -1,12 +1,14 @@
 env: "local"
 
-db:
-  username: "postgres"
-  host: "db"
-  port: ""
-  dbname: ""
-  sslmode: "disable"
-  password: ""
+env-file: ".env.dev"
+
+#db:
+#  username: ${POSTGRES_USERNAME}
+#  host: ${POSTGRES_HOST}
+#  port: ${POSTGRES_PORT}
+#  dbname: ${POSTGRES_DBNAME}
+#  sslmode: ${POSTGRES_SSLMODE}
+#  password: ${POSTGRES_PASSWORD}
 
 http_server:
   address: "0.0.0.0:8082"
@@ -24,4 +26,4 @@ cache:
 auth:
   access_token_ttl: 2m
   refresh_token_ttl: 6m
-  jwt_secret: "xxxxxxx" # TODO: Вынести
+#  jwt_secret: ${AUTH_JWT_SECRET}
