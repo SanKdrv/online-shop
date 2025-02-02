@@ -47,7 +47,7 @@ func NewPostgresDB(cfg Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	if err := RunMigrations(db, "./schema"); err != nil {
+	if err := RunMigrations(db, "./migrations"); err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 

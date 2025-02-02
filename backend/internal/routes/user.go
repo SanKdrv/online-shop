@@ -277,7 +277,7 @@ func (h *Handler) signOut(log *slog.Logger) http.HandlerFunc {
 // @Failure 400,404 {object} GetUsernameByIDResponse
 // @Failure 500 {object} GetUsernameByIDResponse
 // @Failure default {object} GetUsernameByIDResponse
-// @Router /api/auth/get-username-by-id [post]
+// @Router /api/user/get-username-by-id [post]
 func (h *Handler) getUsernameByID(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.user.getUsernameByID"

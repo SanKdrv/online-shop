@@ -39,6 +39,6 @@ func (r *UsersRepo) GetUserByEmail(email, password string) (domain.User, error) 
 
 func (r *UsersRepo) GetUsernameByID(id int64) (string, error) {
 	var username string
-	err := r.db.Where("id = ?", id).First(&username).Error
+	err := r.db.Model(&domain.User{}).Where("id = ?", id).Pluck("username", &username).Error
 	return username, err
 }
