@@ -44,6 +44,37 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 		r.Route("/user", func(r chi.Router) {
 			r.Post("/get-username-by-id", h.getUsernameByID(log))
 		})
+
+		// Brand
+		r.Route("/brand", func(r chi.Router) {
+
+		})
+
+		// Category
+		r.Route("/category", func(r chi.Router) {
+
+		})
+
+		// Order
+		r.Route("/order", func(r chi.Router) {
+
+		})
+
+		// OrderContent
+		r.Route("/order-content", func(r chi.Router) {
+
+		})
+
+		// Product
+		r.Route("/product", func(r chi.Router) {
+
+		})
+
+		// ProductImage
+		r.Route("/product-image", func(r chi.Router) {
+
+		})
+
 		//r.Use(middleware.UserIdentity(log, cfg)) // Пример мидлвэра аутентификации
 	})
 
