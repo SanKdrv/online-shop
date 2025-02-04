@@ -34,17 +34,17 @@ func (r *CategoriesRepo) CreateCategory(name string) (int64, error) {
 	if err := r.db.Create(&category).Error; err != nil {
 		return 0, err
 	}
-	return category.ID, nil
+	return category.Id, nil
 }
 
-func (r *CategoriesRepo) DeleteCategory(categoryID int64) error {
-	if err := r.db.Delete(&domain.Category{ID: categoryID}).Error; err != nil {
+func (r *CategoriesRepo) DeleteCategory(categoryId int64) error {
+	if err := r.db.Delete(&domain.Category{Id: categoryId}).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *CategoriesRepo) UpdateCategory(categoryID int64, name string) error {
-	err := r.db.Model(&domain.Category{}).Where("id = ?", categoryID).Update("name", name).Error
+func (r *CategoriesRepo) UpdateCategory(categoryId int64, name string) error {
+	err := r.db.Model(&domain.Category{}).Where("id = ?", categoryId).Update("name", name).Error
 	return err
 }

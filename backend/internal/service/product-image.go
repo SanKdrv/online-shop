@@ -13,8 +13,8 @@ func NewProductsImagesService(repo repository.ProductsImages) *ProductsImagesSer
 	return &ProductsImagesService{repo: repo}
 }
 
-func (s *ProductsImagesService) GetImageHashByProductID(productID int64) (string, error) {
-	return s.repo.GetImageHashByProductID(productID)
+func (s *ProductsImagesService) GetImageHashByProductId(productId int64) (string, error) {
+	return s.repo.GetImageHashByProductId(productId)
 }
 
 func (s *ProductsImagesService) CreateProductImage(productImage domain.ProductImage) (int64, error) {
@@ -29,6 +29,6 @@ func (s *ProductsImagesService) DeleteProductImageByName(name string) error {
 	return s.repo.DeleteProductImageByName(name)
 }
 
-func (s *ProductsImagesService) DeleteProductImageByID(imageID int64) error {
-	return s.repo.DeleteProductImageByID(imageID)
+func (s *ProductsImagesService) DeleteProductImageById(imageId int64) error {
+	return s.repo.DeleteProductImageById(imageId)
 }

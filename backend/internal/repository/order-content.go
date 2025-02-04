@@ -19,14 +19,14 @@ func (r *OrdersContentRepo) CreateOrderContent(orderContent domain.OrderContent)
 	if err := r.db.Create(&orderContent).Error; err != nil {
 		return 0, err
 	}
-	return orderContent.ID, nil
+	return orderContent.Id, nil
 }
 
 func (r *OrdersContentRepo) UpdateOrderContent(orderContent domain.OrderContent) error {
-	return r.db.Model(&domain.OrderContent{ID: orderContent.ID}).Updates(orderContent).Error
-	//return r.db.Model(&domain.OrderContent{}).Where("id = ?", orderContent.ID).Updates(orderContent).Error
+	return r.db.Model(&domain.OrderContent{Id: orderContent.Id}).Updates(orderContent).Error
+	//return r.db.Model(&domain.OrderContent{}).Where("id = ?", orderContent.Id).Updates(orderContent).Error
 }
 
-func (r *OrdersContentRepo) DeleteOrderContent(orderContentID int64) error {
-	return r.db.Delete(&domain.OrderContent{ID: orderContentID}).Error
+func (r *OrdersContentRepo) DeleteOrderContent(orderContentId int64) error {
+	return r.db.Delete(&domain.OrderContent{Id: orderContentId}).Error
 }

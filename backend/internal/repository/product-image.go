@@ -15,9 +15,9 @@ func NewProductsImagesRepo(db *gorm.DB) *ProductsImagesRepo {
 	}
 }
 
-func (r *ProductsImagesRepo) GetImageHashByProductID(productID int64) (string, error) {
+func (r *ProductsImagesRepo) GetImageHashByProductId(productId int64) (string, error) {
 	var hash string
-	if err := r.db.First(&domain.ProductImage{}, "product_id = ?", productID).Pluck("image_hash", &hash).Error; err != nil {
+	if err := r.db.First(&domain.ProductImage{}, "product_id = ?", productId).Pluck("image_hash", &hash).Error; err != nil {
 		return "", err
 	}
 	return hash, nil
@@ -27,7 +27,7 @@ func (r *ProductsImagesRepo) CreateProductImage(productImage domain.ProductImage
 	if err := r.db.Create(&productImage).Error; err != nil {
 		return 0, err
 	}
-	return productImage.ID, nil
+	return productImage.Id, nil
 }
 
 func (r *ProductsImagesRepo) UpdateProductImage(oldName string, productImage domain.ProductImage) error {
@@ -38,6 +38,6 @@ func (r *ProductsImagesRepo) DeleteProductImageByName(name string) error {
 	return r.db.Delete(&domain.ProductImage{}, "image_hash = ?", name).Error
 }
 
-func (r *ProductsImagesRepo) DeleteProductImageByID(imageID int64) error {
-	return r.db.Delete(&domain.ProductImage{}, "id = ?", imageID).Error
+func (r *ProductsImagesRepo) DeleteProductImageById(imageId int64) error {
+	return r.db.Delete(&domain.ProductImage{}, "id = ?", imageId).Error
 }

@@ -21,6 +21,6 @@ func (s *OrdersContentService) UpdateOrderContent(orderContent domain.OrderConte
 	return s.repo.UpdateOrderContent(orderContent)
 }
 
-func (s *OrdersContentService) DeleteOrderContent(orderContentID int64) error {
-	return s.repo.DeleteOrderContent(orderContentID)
+func (s *OrdersContentService) DeleteOrderContent(orderContentId int64) error {
+	return s.repo.DeleteOrderContent(orderContentId)
 }

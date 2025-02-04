@@ -35,34 +35,34 @@ type Brands interface {
 
 type Products interface {
 	CreateProduct(product domain.Product) (int64, error)
-	Get(name string, brandID int64, categoryID int64) (domain.Product, error)
-	GetAllByCategory(categoryID int64) ([]domain.Product, error)
+	Get(name string, brandId int64, categoryId int64) (domain.Product, error)
+	GetAllByCategory(categoryId int64) ([]domain.Product, error)
 	GetAllByName(name string) ([]domain.Product, error)
-	GetAllByBrand(brandID int64) ([]domain.Product, error)
+	GetAllByBrand(brandId int64) ([]domain.Product, error)
 	UpdateProduct(product domain.Product) error
 	DeleteProduct(productID int64) error
 }
 
 type ProductsImages interface {
-	GetImageHashByProductID(productID int64) (string, error)
+	GetImageHashByProductId(productId int64) (string, error)
 	CreateProductImage(productImage domain.ProductImage) (int64, error)
 	UpdateProductImage(oldName string, productImage domain.ProductImage) error
 	DeleteProductImageByName(name string) error
-	DeleteProductImageByID(imageID int64) error
+	DeleteProductImageById(imageId int64) error
 }
 
 type Orders interface {
 	CreateOrder(order domain.Order) (int64, error)
-	GetOrderByID(orderID int64) (domain.Order, error)
-	GetOrdersByUserID(userID int64) ([]domain.Order, error)
+	GetOrderById(orderId int64) (domain.Order, error)
+	GetOrdersByUserId(userId int64) ([]domain.Order, error)
 	UpdateOrder(order domain.Order) error
-	DeleteOrder(orderID int64) error
+	DeleteOrder(orderId int64) error
 }
 
 type OrdersContent interface {
 	CreateOrderContent(orderContent domain.OrderContent) (int64, error)
 	UpdateOrderContent(orderContent domain.OrderContent) error
-	DeleteOrderContent(orderContentID int64) error
+	DeleteOrderContent(orderContentId int64) error
 }
 
 type WebSocket interface {
