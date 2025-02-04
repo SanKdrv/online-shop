@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"backend/internal/domain"
+	//_ "backend/internal/domain"
 	"backend/internal/lib/api/response"
+	"backend/internal/types"
 	"encoding/json"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
@@ -10,6 +11,18 @@ import (
 	"net/http"
 )
 
+// @Summary createProduct
+// @Tags Product
+// @Description creating product
+// @ID create-product
+// @Accept  json
+// @Produce  json
+// @Param input body types.CreateProductRequest true "Создаёт товар"
+// @Success 200 {object} types.CreateProductResponse
+// @Failure 400,404 {object} types.CreateProductResponse
+// @Failure 500 {object} types.CreateProductResponse
+// @Failure default {object} types.CreateProductResponse
+// @Router /api/product/create-product [post]
 func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.createProduct"
@@ -39,6 +52,18 @@ func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary getProduct
+// @Tags Product
+// @Description getting product
+// @ID get-product
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetProductRequest true "получает товар по айди"
+// @Success 200 {object} types.getProductResponse
+// @Failure 400,404 {object} types.getProductResponse
+// @Failure 500 {object} types.getProductResponse
+// @Failure default {object} types.getProductResponse
+// @Router /api/product/get-product [get]
 func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.getProduct"
@@ -62,12 +87,24 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		render.JSON(w, r, types.getProductResponse{
+		render.JSON(w, r, types.GetProductResponse{
 			Product: product,
 		})
 	}
 }
 
+// @Summary getAllByCategory
+// @Tags Product
+// @Description get all products by category
+// @ID get-all-by-category
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetAllByCategoryRequest true "Получает все товары по категории"
+// @Success 200 {object} types.GetAllByCategoryResponse
+// @Failure 400,404 {object} types.GetAllByCategoryResponse
+// @Failure 500 {object} types.GetAllByCategoryResponse
+// @Failure default {object} types.GetAllByCategoryResponse
+// @Router /api/product/get-all-by-category [get]
 func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.getAllByCategory"
@@ -97,6 +134,18 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary getAllByName
+// @Tags Product
+// @Description getting all products by name
+// @ID get-all-by-name
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetAllByNameRequest true "Получает все товары по названию товара"
+// @Success 200 {object} types.GetAllByNameResponse
+// @Failure 400,404 {object} types.GetAllByNameResponse
+// @Failure 500 {object} types.GetAllByNameResponse
+// @Failure default {object} types.GetAllByNameResponse
+// @Router /api/product/get-all-by-name [get]
 func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.getAllByName"
@@ -126,6 +175,18 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary getAllByBrand
+// @Tags Product
+// @Description getting all products by brand
+// @ID get-all-by-brand
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetAllByBrandRequest true "Получает все товары по названию бренда"
+// @Success 200 {object} types.GetAllByBrandResponse
+// @Failure 400,404 {object} types.GetAllByBrandResponse
+// @Failure 500 {object} types.GetAllByBrandResponse
+// @Failure default {object} types.GetAllByBrandResponse
+// @Router /api/product/get-all-by-brand [get]
 func (h *Handler) getAllByBrand(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.getAllByBrand"
@@ -155,6 +216,18 @@ func (h *Handler) getAllByBrand(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary updateProduct
+// @Tags Product
+// @Description updating product by id
+// @ID update-product
+// @Accept  json
+// @Produce  json
+// @Param input body types.UpdateProductRequest true "Обновляет товар по айди"
+// @Success 200 {object} types.UpdateProductResponse
+// @Failure 400,404 {object} types.UpdateProductResponse
+// @Failure 500 {object} types.UpdateProductResponse
+// @Failure default {object} types.UpdateProductResponse
+// @Router /api/product/update-product [put]
 func (h *Handler) updateProduct(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.updateProduct"
@@ -184,6 +257,18 @@ func (h *Handler) updateProduct(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary deleteProduct
+// @Tags Product
+// @Description deleting product by id
+// @ID delete-product
+// @Accept  json
+// @Produce  json
+// @Param input body types.DeleteProductRequest true "Удаляет товар по айди"
+// @Success 200 {object} types.DeleteProductResponse
+// @Failure 400,404 {object} types.DeleteProductResponse
+// @Failure 500 {object} types.DeleteProductResponse
+// @Failure default {object} types.DeleteProductResponse
+// @Router /api/product/delete-product [delete]
 func (h *Handler) deleteProduct(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product.deleteProduct"

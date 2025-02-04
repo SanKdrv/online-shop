@@ -68,9 +68,10 @@ type Orders interface {
 }
 
 type OrdersContent interface {
+	// TODO: GetOrderContent(orderId int64) ([]domain.OrderContent, error)
 	CreateOrderContent(orderContent domain.OrderContent) (int64, error)
 	UpdateOrderContent(orderContent domain.OrderContent) error
-	DeleteOrderContent(orderContentID int64) error
+	DeleteOrderContent(orderContentId int64) error
 }
 
 type WebSocket interface {
