@@ -56,6 +56,7 @@ type ProductsImages interface {
 	UpdateProductImage(oldName string, productImage domain.ProductImage) error
 	DeleteProductImageByName(name string) error
 	DeleteProductImageById(imageId int64) error
+	// TODO: GetRecordIdByImageHash
 }
 
 type Orders interface {
