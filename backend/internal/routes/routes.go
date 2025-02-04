@@ -47,7 +47,11 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// Brand
 		r.Route("/brand", func(r chi.Router) {
-
+			r.Get("/get-id-by-brand", h.getIdByBrand(log))
+			r.Get("/get-brand-by-id", h.getBrandById(log))
+			r.Post("/create-brand", h.createBrand(log))
+			r.Put("/update-brand", h.updateBrand(log))
+			r.Delete("/delete-brand", h.deleteBrand(log))
 		})
 
 		// Category

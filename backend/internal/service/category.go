@@ -10,22 +10,22 @@ func NewCategoriesService(repo repository.Categories) *CategoriesService {
 	return &CategoriesService{repo: repo}
 }
 
-func (s *CategoriesService) GetIDByCategory(name string) (int64, error) {
-	return 0, nil
+func (s *CategoriesService) GetIdByCategory(name string) (int64, error) {
+	return s.repo.GetIdByCategory(name)
 }
 
-func (s *CategoriesService) GetCategoryByID(categoryID int64) (string, error) {
-	return "", nil
+func (s *CategoriesService) GetCategoryById(categoryID int64) (string, error) {
+	return s.repo.GetCategoryById(categoryID)
 }
 
 func (s *CategoriesService) CreateCategory(name string) (int64, error) {
-	return 0, nil
+	return s.repo.CreateCategory(name)
 }
 
 func (s *CategoriesService) DeleteCategory(categoryID int64) error {
-	return nil
+	return s.repo.DeleteCategory(categoryID)
 }
 
 func (s *CategoriesService) UpdateCategory(categoryID int64, name string) error {
-	return nil
+	return s.repo.UpdateCategory(categoryID, name)
 }

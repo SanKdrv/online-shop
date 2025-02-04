@@ -81,7 +81,7 @@ func (c *Client) readPump(hub *Hub, services *service.Service) {
 			UserID:      msgRequest.UserID,
 		}
 
-		if err := services.SendMessage(normalizedMessage); err != nil {
+		if err := services.WebSocket.SendMessage(normalizedMessage); err != nil {
 			slog.Error("failed to save message", slog.String("error", err.Error()))
 			break
 		}

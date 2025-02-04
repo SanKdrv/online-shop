@@ -15,15 +15,15 @@ func NewCategoriesRepo(db *gorm.DB) *CategoriesRepo {
 	}
 }
 
-func (r *CategoriesRepo) GetIDByCategory(name string) (int64, error) {
+func (r *CategoriesRepo) GetIdByCategory(name string) (int64, error) {
 	var id int64
 	err := r.db.Model(&domain.Category{}).Where("name = ?", name).Pluck("id", &id).Error
 	return id, err
 }
 
-func (r *CategoriesRepo) GetCategoryByID(categoryID int64) (string, error) {
+func (r *CategoriesRepo) GetCategoryById(categoryId int64) (string, error) {
 	var name string
-	err := r.db.Model(&domain.Category{}).Where("id = ?", categoryID).Pluck("name", &name).Error
+	err := r.db.Model(&domain.Category{}).Where("id = ?", categoryId).Pluck("name", &name).Error
 	return name, err
 }
 

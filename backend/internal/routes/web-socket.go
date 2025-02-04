@@ -14,7 +14,7 @@ import (
 type SendMessageRequest = types.SendMessageRequest
 type SendMessageResponse = types.SendMessageResponse
 
-// @Summary Send Message
+// @Summary sendMessage
 // @Tags Chat
 // @Description Отправка сообщения в чат
 // @ID send-message

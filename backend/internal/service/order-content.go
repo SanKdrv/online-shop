@@ -14,13 +14,13 @@ func NewOrdersContentService(repo repository.OrdersContent) *OrdersContentServic
 }
 
 func (s *OrdersContentService) CreateOrderContent(orderContent domain.OrderContent) (int64, error) {
-	return 0, nil
+	return s.repo.CreateOrderContent(orderContent)
 }
 
 func (s *OrdersContentService) UpdateOrderContent(orderContent domain.OrderContent) error {
-	return nil
+	return s.repo.UpdateOrderContent(orderContent)
 }
 
 func (s *OrdersContentService) DeleteOrderContent(orderContentID int64) error {
-	return nil
+	return s.repo.DeleteOrderContent(orderContentID)
 }

@@ -14,21 +14,21 @@ func NewOrdersService(repo repository.Orders) *OrdersService {
 }
 
 func (s *OrdersService) CreateOrder(order domain.Order) (int64, error) {
-	return 0, nil
+	return s.repo.CreateOrder(order)
 }
 
 func (s *OrdersService) GetOrderByID(orderID int64) (domain.Order, error) {
-	return domain.Order{}, nil
+	return s.repo.GetOrderByID(orderID)
 }
 
 func (s *OrdersService) GetOrdersByUserID(userID int64) ([]domain.Order, error) {
-	return []domain.Order{}, nil
+	return s.repo.GetOrdersByUserID(userID)
 }
 
 func (s *OrdersService) UpdateOrder(order domain.Order) error {
-	return nil
+	return s.repo.UpdateOrder(order)
 }
 
 func (s *OrdersService) DeleteOrder(orderID int64) error {
-	return nil
+	return s.repo.DeleteOrder(orderID)
 }

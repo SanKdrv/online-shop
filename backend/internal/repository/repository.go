@@ -18,19 +18,19 @@ type RefreshSession interface {
 }
 
 type Categories interface {
-	GetIDByCategory(name string) (int64, error)
-	GetCategoryByID(categoryID int64) (string, error)
+	GetIdByCategory(name string) (int64, error)
+	GetCategoryById(categoryId int64) (string, error)
 	CreateCategory(name string) (int64, error)
-	DeleteCategory(categoryID int64) error
-	UpdateCategory(categoryID int64, name string) error
+	DeleteCategory(categoryId int64) error
+	UpdateCategory(categoryId int64, name string) error
 }
 
 type Brands interface {
-	GetIDByBrand(name string) (int64, error)
-	GetBrandByID(categoryID int64) (string, error)
+	GetIdByBrand(name string) (int64, error)
+	GetBrandById(brandId int64) (string, error)
 	CreateBrand(name string) (int64, error)
-	DeleteBrand(categoryID int64) error
-	UpdateBrand(categoryID int64, name string) error
+	DeleteBrand(brandId int64) error
+	UpdateBrand(brandId int64, name string) error
 }
 
 type Products interface {

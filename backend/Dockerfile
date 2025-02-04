@@ -16,7 +16,7 @@ COPY ./ssl /etc/ssl/
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # Генерация документации и сборка
-RUN swag init -g cmd/main.go && \
+RUN swag init --parseDependency --parseInternal -g cmd/main.go && \
     go build -o main ./cmd
 
 # Устанавливаем значение по умолчанию для переменной

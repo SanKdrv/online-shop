@@ -10,18 +10,18 @@ func NewBrandsService(repo repository.Brands) *BrandsService {
 	return &BrandsService{repo: repo}
 }
 
-// GetIDByBrand retrieves the ID of a brand by its name.
+// GetIdByBrand retrieves the id of a brand by its name.
 //
 // Returns the brand ID and an error if the operation fails or if the brand does not exist.
-func (s *BrandsService) GetIDByBrand(name string) (int64, error) {
-	return s.repo.GetIDByBrand(name)
+func (s *BrandsService) GetIdByBrand(name string) (int64, error) {
+	return s.repo.GetIdByBrand(name)
 }
 
-// GetBrandByID returns brand name by brand id.
+// GetBrandById returns brand name by brand id.
 //
 // Returns empty string if brand does not exist in DB.
-func (s *BrandsService) GetBrandByID(brandId int64) (string, error) {
-	return s.repo.GetBrandByID(brandId)
+func (s *BrandsService) GetBrandById(brandId int64) (string, error) {
+	return s.repo.GetBrandById(brandId)
 }
 
 // CreateBrand creates a new brand with the given name.
