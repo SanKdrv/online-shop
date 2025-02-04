@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"backend/internal/config"
 	"backend/internal/lib/api/response"
 	"backend/internal/types"
 	"encoding/json"
@@ -26,7 +25,7 @@ type SendMessageResponse = types.SendMessageResponse
 // @Failure 401 {object} SendMessageResponse "Неверные учетные данные"
 // @Failure 500 {object} SendMessageResponse "Внутренняя ошибка сервера"
 // @Router /stream/chat/send-message [post]
-func (h *Handler) sendMessage(log *slog.Logger, cfg *config.Config) http.HandlerFunc {
+func (h *Handler) sendMessage(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.web-socket.sendMessage"
 
