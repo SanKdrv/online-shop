@@ -16,13 +16,17 @@ func NewOrdersContentRepo(db *gorm.DB) *OrdersContentRepo {
 }
 
 func (r *OrdersContentRepo) CreateOrderContent(orderContent domain.OrderContent) (int64, error) {
-	return 0, nil
+	if err := r.db.Create(&orderContent).Error; err != nil {
+		return 0, err
+	}
+	return orderContent.ID, nil
 }
 
 func (r *OrdersContentRepo) UpdateOrderContent(orderContent domain.OrderContent) error {
-	return nil
+	return r.db.Model(&domain.OrderContent{ID: orderContent.ID}).Updates(orderContent).Error
+	//return r.db.Model(&domain.OrderContent{}).Where("id = ?", orderContent.ID).Updates(orderContent).Error
 }
 
 func (r *OrdersContentRepo) DeleteOrderContent(orderContentID int64) error {
-	return nil
+	return r.db.Delete(&domain.OrderContent{ID: orderContentID}).Error
 }
