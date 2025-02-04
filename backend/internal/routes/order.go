@@ -51,7 +51,6 @@ func (h *Handler) createOrder(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
-// TODO
 // @Summary getOrderById
 // @Tags Order
 // @Description getting order by id

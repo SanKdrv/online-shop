@@ -1,7 +1,6 @@
 package routes
 
 import (
-	//_ "backend/internal/domain"
 	"backend/internal/lib/api/response"
 	"backend/internal/types"
 	"encoding/json"
@@ -244,7 +243,7 @@ func (h *Handler) updateProduct(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		err := h.services.Products.UpdateProduct(req.OrderContent)
+		err := h.services.Products.UpdateProduct(req.Product)
 		if err != nil {
 			log.Error("failed to update product", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

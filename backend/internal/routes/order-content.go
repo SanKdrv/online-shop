@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"backend/internal/domain"
 	"backend/internal/lib/api/response"
 	"backend/internal/types"
 	"encoding/json"
