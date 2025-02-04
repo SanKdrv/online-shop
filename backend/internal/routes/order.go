@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-// @Summary сreateOrder
+// @Summary createOrder
 // @Tags Order
 // @Description creating order
 // @ID create-order
@@ -22,7 +22,7 @@ import (
 // @Failure 500 {object} types.CreateOrderResponse
 // @Failure default {object} types.CreateOrderResponse
 // @Router /api/order/create-order [post]
-func (h *Handler) сreateOrder(log *slog.Logger) http.HandlerFunc {
+func (h *Handler) createOrder(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.order.сreateOrder"
 
@@ -51,6 +51,19 @@ func (h *Handler) сreateOrder(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// TODO
+// @Summary getOrderById
+// @Tags Order
+// @Description getting order by id
+// @ID get-order-by-id
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetOrderByIdRequest true "Ищет заказ по id"
+// @Success 200 {object} types.GetOrderByIdResponse
+// @Failure 400,404 {object} types.GetOrderByIdResponse
+// @Failure 500 {object} types.GetOrderByIdResponse
+// @Failure default {object} types.GetOrderByIdResponse
+// @Router /api/order/get-order-by-id [get]
 func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.order.getOrderById"
@@ -67,7 +80,7 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		order, err := h.services.Orders.GetOrderById(req.CategoryName)
+		order, err := h.services.Orders.GetOrderById(req.CategoryId)
 		if err != nil {
 			log.Error("failed to get order by order id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -80,6 +93,18 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary getOrdersByUserId
+// @Tags Order
+// @Description getting orders by user id
+// @ID get-orders-by-user-id
+// @Accept  json
+// @Produce  json
+// @Param input body types.GetOrdersByUserIdRequest true "Ищет все заказы по айди пользователя"
+// @Success 200 {object} types.GetOrdersByUserIdResponse
+// @Failure 400,404 {object} types.GetOrdersByUserIdResponse
+// @Failure 500 {object} types.GetOrdersByUserIdResponse
+// @Failure default {object} types.GetOrdersByUserIdResponse
+// @Router /api/order/get-orders-by-user-id [get]
 func (h *Handler) getOrdersByUserId(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.order.getIdByCategory"
@@ -104,11 +129,23 @@ func (h *Handler) getOrdersByUserId(log *slog.Logger) http.HandlerFunc {
 		}
 
 		render.JSON(w, r, types.GetOrdersByUserIdResponse{
-			Order: orders,
+			Orders: orders,
 		})
 	}
 }
 
+// @Summary updateOrder
+// @Tags Order
+// @Description updating order
+// @ID update-order
+// @Accept  json
+// @Produce  json
+// @Param input body types.UpdateOrderRequest true "Обновляет заказ"
+// @Success 200 {object} types.UpdateOrderResponse
+// @Failure 400,404 {object} types.UpdateOrderResponse
+// @Failure 500 {object} types.UpdateOrderResponse
+// @Failure default {object} types.UpdateOrderResponse
+// @Router /api/order/update-order [put]
 func (h *Handler) updateOrder(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.order.updateOrder"
@@ -138,6 +175,18 @@ func (h *Handler) updateOrder(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
+// @Summary deleteOrder
+// @Tags Order
+// @Description deleting order
+// @ID delete-order
+// @Accept  json
+// @Produce  json
+// @Param input body types.DeleteOrderRequest true "Удаляет заказ"
+// @Success 200 {object} types.DeleteOrderResponse
+// @Failure 400,404 {object} types.DeleteOrderResponse
+// @Failure 500 {object} types.DeleteOrderResponse
+// @Failure default {object} types.DeleteOrderResponse
+// @Router /api/order/delete-order [delete]
 func (h *Handler) deleteOrder(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.order.deleteOrder"
