@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+	"strconv"
 )
 
 // @Summary getIdByBrand
@@ -16,7 +17,7 @@ import (
 // @ID get-brand-id-by-brand-name
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetIdByBrandRequest true "Возвращает id бренда по названию"
+// @Param brand_name query string true "Название бренда"
 // @Success 200 {object} types.GetIdByBrandResponse
 // @Failure 400,404 {object} types.GetIdByBrandResponse
 // @Failure 500 {object} types.GetIdByBrandResponse
@@ -31,14 +32,14 @@ func (h *Handler) getIdByBrand(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetIdByBrandRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		brandName := r.URL.Query().Get("brand_name")
+		if brandName == "" {
+			log.Error("missing brand_name in query params")
+			render.JSON(w, r, response.Error("Missing brand_name parameter"))
 			return
 		}
 
-		brandId, err := h.services.Brands.GetIdByBrand(req.BrandName)
+		brandId, err := h.services.Brands.GetIdByBrand(brandName)
 		if err != nil {
 			log.Error("failed to get brand name by id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -57,7 +58,7 @@ func (h *Handler) getIdByBrand(log *slog.Logger) http.HandlerFunc {
 // @ID get-brand-name-by-brand-id
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetBrandByIdRequest true "Возвращает название бренда по id"
+// @Param brand_id query int64 true "id бренда"
 // @Success 200 {object} types.GetBrandByIdResponse
 // @Failure 400,404 {object} types.GetBrandByIdResponse
 // @Failure 500 {object} types.GetBrandByIdResponse
@@ -72,14 +73,14 @@ func (h *Handler) getBrandById(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetBrandByIdRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		brandId, err := strconv.ParseInt(r.URL.Query().Get("brand_id"), 10, 64)
+		if err != nil {
+			log.Error("missing brand_id in query params")
+			render.JSON(w, r, response.Error("Missing brand_id parameter"))
 			return
 		}
 
-		brandName, err := h.services.Brands.GetBrandById(req.BrandId)
+		brandName, err := h.services.Brands.GetBrandById(brandId)
 		if err != nil {
 			log.Error("failed to get brand id by name", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

@@ -106,6 +106,6 @@ func (s *UsersService) VerifyUser(identifier, password, verifyBy string) (domain
 	return user, nil // User verified
 }
 
-func (s *UsersService) GetUsernameByID(userId int64) (string, error) {
+func (s *UsersService) GetUsernameById(userId int64) (string, error) {
 	return s.repo.GetUsernameById(userId)
 }

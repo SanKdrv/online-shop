@@ -56,27 +56,47 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// Category
 		r.Route("/category", func(r chi.Router) {
-
+			r.Get("/get-id-by-category", h.getIdByCategory(log))
+			r.Get("/get-category-by-id", h.getCategoryById(log))
+			r.Post("/create-category", h.createCategory(log))
+			r.Delete("/delete-category", h.deleteCategory(log))
+			r.Put("/update-category", h.updateCategory(log))
 		})
 
 		// Order
 		r.Route("/order", func(r chi.Router) {
-
+			r.Post("/create-order", h.createOrder(log))
+			r.Get("/get-order-by-id", h.getOrderById(log))
+			r.Get("/get-orders-by-user-id", h.getOrdersByUserId(log))
+			r.Put("/update-order", h.updateOrder(log))
+			r.Delete("/delete-order", h.deleteOrder(log))
 		})
 
 		// OrderContent
 		r.Route("/order-content", func(r chi.Router) {
-
+			r.Post("/create-order-content", h.createOrderContent(log))
+			r.Put("/update-order-content", h.updateOrderContent(log))
+			r.Delete("/delete-order-content", h.deleteOrderContent(log))
 		})
 
 		// Product
 		r.Route("/product", func(r chi.Router) {
-
+			r.Post("/create-product", h.createProduct(log))
+			r.Get("/get-product", h.getProduct(log))
+			r.Get("/get-all-by-category", h.getAllByCategory(log))
+			r.Get("/get-all-by-name", h.getAllByName(log))
+			r.Get("/get-all-by-brand", h.getAllByBrand(log))
+			r.Put("/update-product", h.updateProduct(log))
+			r.Delete("/delete-product", h.deleteProduct(log))
 		})
 
 		// ProductImage
 		r.Route("/product-image", func(r chi.Router) {
-
+			r.Get("/get-image-hash-by-product-id", h.getImageHashByProductId(log))
+			r.Post("/create-product-image", h.createProductImage(log))
+			r.Put("/update-product-image", h.updateProductImage(log))
+			r.Delete("/delete-product-image-by-name", h.deleteProductImageByName(log))
+			r.Delete("/delete-product-image-by-id", h.deleteProductImageById(log))
 		})
 
 		//r.Use(middleware.UserIdentity(log, cfg)) // Пример мидлвэра аутентификации

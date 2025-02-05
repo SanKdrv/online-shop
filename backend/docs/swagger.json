@@ -1,100 +1,2824 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "API server for stream service application",
-    "title": "Stream Service Prototype API",
-    "contact": {},
-    "version": "1.0"
-  },
-  "host": "localhost:8082",
-  "basePath": "/",
-  "paths": {
-    "/api/auth/login": {
-      "post": {
-        "description": "Authenticates user and returns a JWT token",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Login",
-        "parameters": [
-          {
-            "description": "Login request",
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/login.Request"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/login.MergedResponse"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "definitions": {
-    "login.MergedResponse": {
-      "description": "Ответ после успешного логина",
-      "type": "object",
-      "properties": {
-        "access_token": {
-          "type": "string"
-        },
-        "response": {
-          "$ref": "#/definitions/response.Response"
-        }
-      }
+    "swagger": "2.0",
+    "info": {
+        "description": "API server for stream service application",
+        "title": "Stream Service Prototype API",
+        "contact": {},
+        "version": "1.0"
     },
-    "login.Request": {
-      "type": "object",
-      "properties": {
-        "password": {
-          "type": "string"
+    "host": "localhost:8082",
+    "basePath": "/",
+    "paths": {
+        "/api/auth/refresh-tokens": {
+            "post": {
+                "description": "refresh access \u0026 refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "RefreshTokens",
+                "operationId": "refresh-tokens",
+                "parameters": [
+                    {
+                        "description": "refresh",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.RefreshTokensRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    }
+                }
+            }
         },
-        "username": {
-          "type": "string"
+        "/api/auth/sign-in": {
+            "post": {
+                "description": "Авторизация пользователя с возвратом access и refresh токенов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Sign In",
+                "operationId": "sign-in-user",
+                "parameters": [
+                    {
+                        "description": "Информация для авторизации",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SignInRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешная авторизация",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/sign-out": {
+            "post": {
+                "description": "delete refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "SignOut",
+                "operationId": "delete-refresh-tokens",
+                "parameters": [
+                    {
+                        "description": "Удаляет рефреш токен из таблицы refresh_tokens",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SignOutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/sign-up": {
+            "post": {
+                "description": "create account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "signUp",
+                "operationId": "create-account",
+                "parameters": [
+                    {
+                        "description": "account info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SignUpRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brand/create-brand": {
+            "post": {
+                "description": "creating brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "createBrand",
+                "operationId": "create-brand",
+                "parameters": [
+                    {
+                        "description": "Создаёт бренд",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateBrandResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brand/delete-brand": {
+            "delete": {
+                "description": "deleting brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "deleteBrand",
+                "operationId": "delete-brand",
+                "parameters": [
+                    {
+                        "description": "Удаляет бренд",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteBrandResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brand/get-brand-by-id": {
+            "get": {
+                "description": "getting brand id by brand name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "getBrandById",
+                "operationId": "get-brand-name-by-brand-id",
+                "parameters": [
+                    {
+                        "description": "Возвращает название бренда по id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetBrandByIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brand/get-id-by-brand": {
+            "get": {
+                "description": "getting brand id by brand name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "getIdByBrand",
+                "operationId": "get-brand-id-by-brand-name",
+                "parameters": [
+                    {
+                        "description": "Возвращает id бренда по названию",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByBrandResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/brand/update-brand": {
+            "put": {
+                "description": "updating brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Brand"
+                ],
+                "summary": "updateBrand",
+                "operationId": "update-brand",
+                "parameters": [
+                    {
+                        "description": "Обновляет бренд",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateBrandResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/create-category": {
+            "post": {
+                "description": "creating category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "createCategory",
+                "operationId": "create-category",
+                "parameters": [
+                    {
+                        "description": "Создаёт категорию",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/delete-category": {
+            "delete": {
+                "description": "deleting category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "deleteCategory",
+                "operationId": "delete-category",
+                "parameters": [
+                    {
+                        "description": "Удаляет категорию",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/get-category-by-id": {
+            "get": {
+                "description": "getting category id by category name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "getCategoryById",
+                "operationId": "get-category-name-by-category-id",
+                "parameters": [
+                    {
+                        "description": "Возвращает название категории по id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetCategoryByIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/get-id-by-category": {
+            "get": {
+                "description": "getting category id by category name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "getIdByCategory",
+                "operationId": "get-category-id-by-category-name",
+                "parameters": [
+                    {
+                        "description": "Возвращает id категории по названию",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetIdByCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/category/update-category": {
+            "put": {
+                "description": "updating category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "summary": "updateCategory",
+                "operationId": "update-category",
+                "parameters": [
+                    {
+                        "description": "Обновляет категорию",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-content/create-order-content": {
+            "post": {
+                "description": "creating order content",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Content"
+                ],
+                "summary": "createOrderContent",
+                "operationId": "create-order-content",
+                "parameters": [
+                    {
+                        "description": "Создаёт заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderContentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-content/delete-order-content": {
+            "delete": {
+                "description": "deleting order content",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Content"
+                ],
+                "summary": "deleteOrderContent",
+                "operationId": "delete-order-content",
+                "parameters": [
+                    {
+                        "description": "Удаляет заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderContentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order-content/update-order-content": {
+            "put": {
+                "description": "updating order content",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order Content"
+                ],
+                "summary": "updateOrderContent",
+                "operationId": "update-order-content",
+                "parameters": [
+                    {
+                        "description": "Обновляет заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderContentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/create-order": {
+            "post": {
+                "description": "creating order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "createOrder",
+                "operationId": "create-order",
+                "parameters": [
+                    {
+                        "description": "Создаёт заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateOrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/delete-order": {
+            "delete": {
+                "description": "deleting order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "deleteOrder",
+                "operationId": "delete-order",
+                "parameters": [
+                    {
+                        "description": "Удаляет заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteOrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/get-order-by-id": {
+            "get": {
+                "description": "getting order by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "getOrderById",
+                "operationId": "get-order-by-id",
+                "parameters": [
+                    {
+                        "description": "Ищет заказ по id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrderByIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/get-orders-by-user-id": {
+            "get": {
+                "description": "getting orders by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "getOrdersByUserId",
+                "operationId": "get-orders-by-user-id",
+                "parameters": [
+                    {
+                        "description": "Ищет все заказы по айди пользователя",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetOrdersByUserIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/update-order": {
+            "put": {
+                "description": "updating order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Order"
+                ],
+                "summary": "updateOrder",
+                "operationId": "update-order",
+                "parameters": [
+                    {
+                        "description": "Обновляет заказ",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateOrderResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-image/create-product-image": {
+            "post": {
+                "description": "creating database record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Image"
+                ],
+                "summary": "createProductImage",
+                "operationId": "create-product-image",
+                "parameters": [
+                    {
+                        "description": "Создаёт запись об изображении в базе данных",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-image/delete-product-image-by-id": {
+            "delete": {
+                "description": "deleting database record by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Image"
+                ],
+                "summary": "deleteProductImageById",
+                "operationId": "delete-product-image-by-id",
+                "parameters": [
+                    {
+                        "description": "Удаляет запись об изображении в базе данных по id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-image/delete-product-image-by-name": {
+            "delete": {
+                "description": "deleting database record by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Image"
+                ],
+                "summary": "deleteProductImageByName",
+                "operationId": "delete-product-image-by-name",
+                "parameters": [
+                    {
+                        "description": "Удаляет запись об изображении в базе данных по хэшу имени",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductImageByNameResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-image/get-image-hash-by-product-id": {
+            "get": {
+                "description": "getting image hash by product id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Image"
+                ],
+                "summary": "getImageHashByProductId",
+                "operationId": "get-image-hash-by-product-id",
+                "parameters": [
+                    {
+                        "description": "Получает хэш-имя изображения по его id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetImageHashByProductIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product-image/update-product-image": {
+            "put": {
+                "description": "updating database record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Image"
+                ],
+                "summary": "updateProductImage",
+                "operationId": "update-product-image",
+                "parameters": [
+                    {
+                        "description": "Обновляет запись об изображении в базе данных по id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductImageResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/create-product": {
+            "post": {
+                "description": "creating product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "createProduct",
+                "operationId": "create-product",
+                "parameters": [
+                    {
+                        "description": "Создаёт товар",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.CreateProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/delete-product": {
+            "delete": {
+                "description": "deleting product by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "deleteProduct",
+                "operationId": "delete-product",
+                "parameters": [
+                    {
+                        "description": "Удаляет товар по айди",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.DeleteProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/get-all-by-brand": {
+            "get": {
+                "description": "getting all products by brand",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "getAllByBrand",
+                "operationId": "get-all-by-brand",
+                "parameters": [
+                    {
+                        "description": "Получает все товары по названию бренда",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByBrandResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/get-all-by-category": {
+            "get": {
+                "description": "get all products by category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "getAllByCategory",
+                "operationId": "get-all-by-category",
+                "parameters": [
+                    {
+                        "description": "Получает все товары по категории",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/get-all-by-name": {
+            "get": {
+                "description": "getting all products by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "getAllByName",
+                "operationId": "get-all-by-name",
+                "parameters": [
+                    {
+                        "description": "Получает все товары по названию товара",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetAllByNameResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/get-product": {
+            "get": {
+                "description": "getting product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "getProduct",
+                "operationId": "get-product",
+                "parameters": [
+                    {
+                        "description": "получает товар по айди",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.GetProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/product/update-product": {
+            "put": {
+                "description": "updating product by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "updateProduct",
+                "operationId": "update-product",
+                "parameters": [
+                    {
+                        "description": "Обновляет товар по айди",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/backend_internal_types.UpdateProductResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/get-username-by-id": {
+            "post": {
+                "description": "get username by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "getUsernameById",
+                "operationId": "get-username-by-id",
+                "parameters": [
+                    {
+                        "description": "Возвращает имя пользователя по user id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.GetUsernameByIdResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stream/chat/send-message": {
+            "post": {
+                "description": "Отправка сообщения в чат",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "sendMessage",
+                "operationId": "send-message",
+                "parameters": [
+                    {
+                        "description": "Информация для авторизации",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SendMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешная отправка сообщения",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SendMessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка запроса",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SendMessageResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Неверные учетные данные",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SendMessageResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера",
+                        "schema": {
+                            "$ref": "#/definitions/internal_routes.SendMessageResponse"
+                        }
+                    }
+                }
+            }
         }
-      }
     },
-    "response.Response": {
-      "description": "Добавляется в ответы сервера",
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
+    "definitions": {
+        "backend_internal_domain.Message": {
+            "type": "object",
+            "properties": {
+                "chat_id": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
         },
-        "status": {
-          "type": "string"
+        "backend_internal_domain.Order": {
+            "type": "object",
+            "properties": {
+                "cost": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_domain.OrderContent": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "order_id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_domain.Product": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_domain.ProductImage": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "image_hash": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.CreateBrandRequest": {
+            "type": "object",
+            "properties": {
+                "brand_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.CreateBrandResponse": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.CreateCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.CreateCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.CreateOrderContentRequest": {
+            "type": "object",
+            "properties": {
+                "order_content": {
+                    "$ref": "#/definitions/backend_internal_domain.OrderContent"
+                }
+            }
+        },
+        "backend_internal_types.CreateOrderContentResponse": {
+            "type": "object",
+            "properties": {
+                "content_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.CreateOrderRequest": {
+            "type": "object",
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/backend_internal_domain.Order"
+                }
+            }
+        },
+        "backend_internal_types.CreateOrderResponse": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.CreateProductImageRequest": {
+            "type": "object",
+            "properties": {
+                "product_image": {
+                    "$ref": "#/definitions/backend_internal_domain.ProductImage"
+                }
+            }
+        },
+        "backend_internal_types.CreateProductImageResponse": {
+            "type": "object",
+            "properties": {
+                "record_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.CreateProductRequest": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "$ref": "#/definitions/backend_internal_domain.Product"
+                }
+            }
+        },
+        "backend_internal_types.CreateProductResponse": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteBrandRequest": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteBrandResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteOrderContentRequest": {
+            "type": "object",
+            "properties": {
+                "content_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteOrderContentResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteOrderRequest": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteOrderResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductImageByIdRequest": {
+            "type": "object",
+            "properties": {
+                "record_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductImageByIdResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductImageByNameRequest": {
+            "type": "object",
+            "properties": {
+                "old_hash_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductImageByNameResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductRequest": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.DeleteProductResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetAllByBrandRequest": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetAllByBrandResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backend_internal_domain.Product"
+                    }
+                }
+            }
+        },
+        "backend_internal_types.GetAllByCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetAllByCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backend_internal_domain.Product"
+                    }
+                }
+            }
+        },
+        "backend_internal_types.GetAllByNameRequest": {
+            "type": "object",
+            "properties": {
+                "product_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetAllByNameResponse": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backend_internal_domain.Product"
+                    }
+                }
+            }
+        },
+        "backend_internal_types.GetBrandByIdRequest": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetBrandByIdResponse": {
+            "type": "object",
+            "properties": {
+                "brand_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetCategoryByIdRequest": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetCategoryByIdResponse": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetIdByBrandRequest": {
+            "type": "object",
+            "properties": {
+                "brand_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetIdByBrandResponse": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetIdByCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetIdByCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetImageHashByProductIdRequest": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetImageHashByProductIdResponse": {
+            "type": "object",
+            "properties": {
+                "hash": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetOrderByIdRequest": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetOrderByIdResponse": {
+            "type": "object",
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/backend_internal_domain.Order"
+                }
+            }
+        },
+        "backend_internal_types.GetOrdersByUserIdRequest": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "backend_internal_types.GetOrdersByUserIdResponse": {
+            "type": "object",
+            "properties": {
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backend_internal_domain.Order"
+                    }
+                }
+            }
+        },
+        "backend_internal_types.GetProductRequest": {
+            "type": "object",
+            "properties": {
+                "brand_id": {
+                    "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.GetProductResponse": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "$ref": "#/definitions/backend_internal_domain.Product"
+                }
+            }
+        },
+        "backend_internal_types.UpdateBrandRequest": {
+            "type": "object",
+            "properties": {
+                "new_brand_name": {
+                    "type": "string"
+                },
+                "old_brand_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateBrandResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "new_category_name": {
+                    "type": "string"
+                },
+                "old_category_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateOrderContentRequest": {
+            "type": "object",
+            "properties": {
+                "order_content": {
+                    "$ref": "#/definitions/backend_internal_domain.OrderContent"
+                }
+            }
+        },
+        "backend_internal_types.UpdateOrderContentResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateOrderRequest": {
+            "type": "object",
+            "properties": {
+                "order": {
+                    "$ref": "#/definitions/backend_internal_domain.Order"
+                }
+            }
+        },
+        "backend_internal_types.UpdateOrderResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "backend_internal_types.UpdateProductRequest": {
+            "type": "object",
+            "properties": {
+                "product": {
+                    "$ref": "#/definitions/backend_internal_domain.Product"
+                }
+            }
+        },
+        "backend_internal_types.UpdateProductResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.GetUsernameByIdRequest": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "internal_routes.GetUsernameByIdResponse": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.RefreshTokensRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                },
+                "userAgent": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.Response": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.SendMessageRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "$ref": "#/definitions/backend_internal_domain.Message"
+                }
+            }
+        },
+        "internal_routes.SendMessageResponse": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.SignInRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "userAgent": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.SignOutRequest": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "internal_routes.SignUpRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
         }
-      }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
-  },
-  "securityDefinitions": {
-    "ApiKeyAuth": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  }
 }

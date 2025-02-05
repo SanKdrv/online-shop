@@ -294,7 +294,7 @@ func (h *Handler) getUsernameById(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		username, err := h.services.Users.GetUsernameByID(req.UserId)
+		username, err := h.services.Users.GetUsernameById(req.UserId)
 		if err != nil {
 			log.Error("failed to get username by id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

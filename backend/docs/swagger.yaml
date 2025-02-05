@@ -1,26 +1,439 @@
 basePath: /
 definitions:
-  login.MergedResponse:
-    description: Ответ после успешного логина
+  backend_internal_domain.Message:
+    properties:
+      chat_id:
+        type: integer
+      message:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  backend_internal_domain.Order:
+    properties:
+      cost:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: integer
+      order_id:
+        type: integer
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  backend_internal_domain.OrderContent:
+    properties:
+      count:
+        type: number
+      id:
+        type: integer
+      order_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  backend_internal_domain.Product:
+    properties:
+      brand_id:
+        type: integer
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  backend_internal_domain.ProductImage:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      image_hash:
+        type: string
+      product_id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  backend_internal_types.CreateBrandRequest:
+    properties:
+      brand_name:
+        type: string
+    type: object
+  backend_internal_types.CreateBrandResponse:
+    properties:
+      brand_id:
+        type: integer
+    type: object
+  backend_internal_types.CreateCategoryRequest:
+    properties:
+      category_name:
+        type: string
+    type: object
+  backend_internal_types.CreateCategoryResponse:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.CreateOrderContentRequest:
+    properties:
+      order_content:
+        $ref: '#/definitions/backend_internal_domain.OrderContent'
+    type: object
+  backend_internal_types.CreateOrderContentResponse:
+    properties:
+      content_id:
+        type: integer
+    type: object
+  backend_internal_types.CreateOrderRequest:
+    properties:
+      order:
+        $ref: '#/definitions/backend_internal_domain.Order'
+    type: object
+  backend_internal_types.CreateOrderResponse:
+    properties:
+      order_id:
+        type: integer
+    type: object
+  backend_internal_types.CreateProductImageRequest:
+    properties:
+      product_image:
+        $ref: '#/definitions/backend_internal_domain.ProductImage'
+    type: object
+  backend_internal_types.CreateProductImageResponse:
+    properties:
+      record_id:
+        type: integer
+    type: object
+  backend_internal_types.CreateProductRequest:
+    properties:
+      product:
+        $ref: '#/definitions/backend_internal_domain.Product'
+    type: object
+  backend_internal_types.CreateProductResponse:
+    properties:
+      product_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteBrandRequest:
+    properties:
+      brand_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteBrandResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteCategoryRequest:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteCategoryResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteOrderContentRequest:
+    properties:
+      content_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteOrderContentResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteOrderRequest:
+    properties:
+      order_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteOrderResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteProductImageByIdRequest:
+    properties:
+      record_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteProductImageByIdResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteProductImageByNameRequest:
+    properties:
+      old_hash_name:
+        type: string
+    type: object
+  backend_internal_types.DeleteProductImageByNameResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.DeleteProductRequest:
+    properties:
+      product_id:
+        type: integer
+    type: object
+  backend_internal_types.DeleteProductResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.GetAllByBrandRequest:
+    properties:
+      brand_id:
+        type: integer
+    type: object
+  backend_internal_types.GetAllByBrandResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/backend_internal_domain.Product'
+        type: array
+    type: object
+  backend_internal_types.GetAllByCategoryRequest:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.GetAllByCategoryResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/backend_internal_domain.Product'
+        type: array
+    type: object
+  backend_internal_types.GetAllByNameRequest:
+    properties:
+      product_name:
+        type: string
+    type: object
+  backend_internal_types.GetAllByNameResponse:
+    properties:
+      products:
+        items:
+          $ref: '#/definitions/backend_internal_domain.Product'
+        type: array
+    type: object
+  backend_internal_types.GetBrandByIdRequest:
+    properties:
+      brand_id:
+        type: integer
+    type: object
+  backend_internal_types.GetBrandByIdResponse:
+    properties:
+      brand_name:
+        type: string
+    type: object
+  backend_internal_types.GetCategoryByIdRequest:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.GetCategoryByIdResponse:
+    properties:
+      category_name:
+        type: string
+    type: object
+  backend_internal_types.GetIdByBrandRequest:
+    properties:
+      brand_name:
+        type: string
+    type: object
+  backend_internal_types.GetIdByBrandResponse:
+    properties:
+      brand_id:
+        type: integer
+    type: object
+  backend_internal_types.GetIdByCategoryRequest:
+    properties:
+      category_name:
+        type: string
+    type: object
+  backend_internal_types.GetIdByCategoryResponse:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.GetImageHashByProductIdRequest:
+    properties:
+      product_id:
+        type: integer
+    type: object
+  backend_internal_types.GetImageHashByProductIdResponse:
+    properties:
+      hash:
+        type: string
+    type: object
+  backend_internal_types.GetOrderByIdRequest:
+    properties:
+      category_id:
+        type: integer
+    type: object
+  backend_internal_types.GetOrderByIdResponse:
+    properties:
+      order:
+        $ref: '#/definitions/backend_internal_domain.Order'
+    type: object
+  backend_internal_types.GetOrdersByUserIdRequest:
+    properties:
+      user_id:
+        type: integer
+    type: object
+  backend_internal_types.GetOrdersByUserIdResponse:
+    properties:
+      orders:
+        items:
+          $ref: '#/definitions/backend_internal_domain.Order'
+        type: array
+    type: object
+  backend_internal_types.GetProductRequest:
+    properties:
+      brand_id:
+        type: integer
+      category_id:
+        type: integer
+      name:
+        type: string
+    type: object
+  backend_internal_types.GetProductResponse:
+    properties:
+      product:
+        $ref: '#/definitions/backend_internal_domain.Product'
+    type: object
+  backend_internal_types.UpdateBrandRequest:
+    properties:
+      new_brand_name:
+        type: string
+      old_brand_name:
+        type: string
+    type: object
+  backend_internal_types.UpdateBrandResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.UpdateCategoryRequest:
+    properties:
+      new_category_name:
+        type: string
+      old_category_name:
+        type: string
+    type: object
+  backend_internal_types.UpdateCategoryResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.UpdateOrderContentRequest:
+    properties:
+      order_content:
+        $ref: '#/definitions/backend_internal_domain.OrderContent'
+    type: object
+  backend_internal_types.UpdateOrderContentResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.UpdateOrderRequest:
+    properties:
+      order:
+        $ref: '#/definitions/backend_internal_domain.Order'
+    type: object
+  backend_internal_types.UpdateOrderResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  backend_internal_types.UpdateProductRequest:
+    properties:
+      product:
+        $ref: '#/definitions/backend_internal_domain.Product'
+    type: object
+  backend_internal_types.UpdateProductResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  internal_routes.GetUsernameByIdRequest:
+    properties:
+      user_id:
+        type: integer
+    type: object
+  internal_routes.GetUsernameByIdResponse:
+    properties:
+      username:
+        type: string
+    type: object
+  internal_routes.RefreshTokensRequest:
+    properties:
+      refresh_token:
+        type: string
+      userAgent:
+        type: string
+    type: object
+  internal_routes.Response:
     properties:
       access_token:
         type: string
-      response:
-        $ref: '#/definitions/response.Response'
+      error:
+        type: string
+      refresh_token:
+        type: string
+      status:
+        type: string
     type: object
-  login.Request:
+  internal_routes.SendMessageRequest:
     properties:
+      message:
+        $ref: '#/definitions/backend_internal_domain.Message'
+    type: object
+  internal_routes.SendMessageResponse:
+    properties:
+      response:
+        type: string
+    type: object
+  internal_routes.SignInRequest:
+    properties:
+      email:
+        type: string
       password:
+        type: string
+      userAgent:
         type: string
       username:
         type: string
     type: object
-  response.Response:
-    description: Добавляется в ответы сервера
+  internal_routes.SignOutRequest:
     properties:
-      error:
+      refresh_token:
         type: string
-      status:
+    type: object
+  internal_routes.SignUpRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
         type: string
     type: object
 host: localhost:8082
@@ -30,34 +443,1402 @@ info:
   title: Stream Service Prototype API
   version: "1.0"
 paths:
-  /api/auth/login:
+  /api/auth/refresh-tokens:
     post:
       consumes:
-        - application/json
-      description: Authenticates user and returns a JWT token
+      - application/json
+      description: refresh access & refresh tokens
+      operationId: refresh-tokens
       parameters:
-        - description: Login request
-          in: body
-          name: request
-          required: true
-          schema:
-            $ref: '#/definitions/login.Request'
+      - description: refresh
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.RefreshTokensRequest'
       produces:
-        - application/json
+      - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/login.MergedResponse'
+            $ref: '#/definitions/internal_routes.Response'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Login
+            $ref: '#/definitions/internal_routes.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+      summary: RefreshTokens
       tags:
-        - Auth
+      - Auth
+  /api/auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Авторизация пользователя с возвратом access и refresh токенов
+      operationId: sign-in-user
+      parameters:
+      - description: Информация для авторизации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешная авторизация
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "401":
+          description: Неверные учетные данные
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+      summary: Sign In
+      tags:
+      - Auth
+  /api/auth/sign-out:
+    post:
+      consumes:
+      - application/json
+      description: delete refresh token
+      operationId: delete-refresh-tokens
+      parameters:
+      - description: Удаляет рефреш токен из таблицы refresh_tokens
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.SignOutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+      summary: SignOut
+      tags:
+      - Auth
+  /api/auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/internal_routes.Response'
+      summary: signUp
+      tags:
+      - Auth
+  /api/brand/create-brand:
+    post:
+      consumes:
+      - application/json
+      description: creating brand
+      operationId: create-brand
+      parameters:
+      - description: Создаёт бренд
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateBrandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateBrandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateBrandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateBrandResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateBrandResponse'
+      summary: createBrand
+      tags:
+      - Brand
+  /api/brand/delete-brand:
+    delete:
+      consumes:
+      - application/json
+      description: deleting brand
+      operationId: delete-brand
+      parameters:
+      - description: Удаляет бренд
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteBrandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteBrandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteBrandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteBrandResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteBrandResponse'
+      summary: deleteBrand
+      tags:
+      - Brand
+  /api/brand/get-brand-by-id:
+    get:
+      consumes:
+      - application/json
+      description: getting brand id by brand name
+      operationId: get-brand-name-by-brand-id
+      parameters:
+      - description: Возвращает название бренда по id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetBrandByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetBrandByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetBrandByIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetBrandByIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetBrandByIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetBrandByIdResponse'
+      summary: getBrandById
+      tags:
+      - Brand
+  /api/brand/get-id-by-brand:
+    get:
+      consumes:
+      - application/json
+      description: getting brand id by brand name
+      operationId: get-brand-id-by-brand-name
+      parameters:
+      - description: Возвращает id бренда по названию
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetIdByBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByBrandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByBrandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByBrandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByBrandResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByBrandResponse'
+      summary: getIdByBrand
+      tags:
+      - Brand
+  /api/brand/update-brand:
+    put:
+      consumes:
+      - application/json
+      description: updating brand
+      operationId: update-brand
+      parameters:
+      - description: Обновляет бренд
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.UpdateBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateBrandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateBrandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateBrandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateBrandResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateBrandResponse'
+      summary: updateBrand
+      tags:
+      - Brand
+  /api/category/create-category:
+    post:
+      consumes:
+      - application/json
+      description: creating category
+      operationId: create-category
+      parameters:
+      - description: Создаёт категорию
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateCategoryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateCategoryResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateCategoryResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateCategoryResponse'
+      summary: createCategory
+      tags:
+      - Category
+  /api/category/delete-category:
+    delete:
+      consumes:
+      - application/json
+      description: deleting category
+      operationId: delete-category
+      parameters:
+      - description: Удаляет категорию
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteCategoryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteCategoryResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteCategoryResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteCategoryResponse'
+      summary: deleteCategory
+      tags:
+      - Category
+  /api/category/get-category-by-id:
+    get:
+      consumes:
+      - application/json
+      description: getting category id by category name
+      operationId: get-category-name-by-category-id
+      parameters:
+      - description: Возвращает название категории по id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetCategoryByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetCategoryByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetCategoryByIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetCategoryByIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetCategoryByIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetCategoryByIdResponse'
+      summary: getCategoryById
+      tags:
+      - Category
+  /api/category/get-id-by-category:
+    get:
+      consumes:
+      - application/json
+      description: getting category id by category name
+      operationId: get-category-id-by-category-name
+      parameters:
+      - description: Возвращает id категории по названию
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetIdByCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByCategoryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByCategoryResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByCategoryResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetIdByCategoryResponse'
+      summary: getIdByCategory
+      tags:
+      - Category
+  /api/category/update-category:
+    put:
+      consumes:
+      - application/json
+      description: updating category
+      operationId: update-category
+      parameters:
+      - description: Обновляет категорию
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateCategoryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateCategoryResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateCategoryResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateCategoryResponse'
+      summary: updateCategory
+      tags:
+      - Category
+  /api/order-content/create-order-content:
+    post:
+      consumes:
+      - application/json
+      description: creating order content
+      operationId: create-order-content
+      parameters:
+      - description: Создаёт заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateOrderContentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderContentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderContentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderContentResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderContentResponse'
+      summary: createOrderContent
+      tags:
+      - Order Content
+  /api/order-content/delete-order-content:
+    delete:
+      consumes:
+      - application/json
+      description: deleting order content
+      operationId: delete-order-content
+      parameters:
+      - description: Удаляет заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteOrderContentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderContentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderContentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderContentResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderContentResponse'
+      summary: deleteOrderContent
+      tags:
+      - Order Content
+  /api/order-content/update-order-content:
+    put:
+      consumes:
+      - application/json
+      description: updating order content
+      operationId: update-order-content
+      parameters:
+      - description: Обновляет заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.UpdateOrderContentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderContentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderContentResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderContentResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderContentResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderContentResponse'
+      summary: updateOrderContent
+      tags:
+      - Order Content
+  /api/order/create-order:
+    post:
+      consumes:
+      - application/json
+      description: creating order
+      operationId: create-order
+      parameters:
+      - description: Создаёт заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateOrderResponse'
+      summary: createOrder
+      tags:
+      - Order
+  /api/order/delete-order:
+    delete:
+      consumes:
+      - application/json
+      description: deleting order
+      operationId: delete-order
+      parameters:
+      - description: Удаляет заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteOrderResponse'
+      summary: deleteOrder
+      tags:
+      - Order
+  /api/order/get-order-by-id:
+    get:
+      consumes:
+      - application/json
+      description: getting order by id
+      operationId: get-order-by-id
+      parameters:
+      - description: Ищет заказ по id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetOrderByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrderByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrderByIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrderByIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrderByIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrderByIdResponse'
+      summary: getOrderById
+      tags:
+      - Order
+  /api/order/get-orders-by-user-id:
+    get:
+      consumes:
+      - application/json
+      description: getting orders by user id
+      operationId: get-orders-by-user-id
+      parameters:
+      - description: Ищет все заказы по айди пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetOrdersByUserIdResponse'
+      summary: getOrdersByUserId
+      tags:
+      - Order
+  /api/order/update-order:
+    put:
+      consumes:
+      - application/json
+      description: updating order
+      operationId: update-order
+      parameters:
+      - description: Обновляет заказ
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.UpdateOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateOrderResponse'
+      summary: updateOrder
+      tags:
+      - Order
+  /api/product-image/create-product-image:
+    post:
+      consumes:
+      - application/json
+      description: creating database record
+      operationId: create-product-image
+      parameters:
+      - description: Создаёт запись об изображении в базе данных
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateProductImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+      summary: createProductImage
+      tags:
+      - Product Image
+  /api/product-image/delete-product-image-by-id:
+    delete:
+      consumes:
+      - application/json
+      description: deleting database record by id
+      operationId: delete-product-image-by-id
+      parameters:
+      - description: Удаляет запись об изображении в базе данных по id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByIdResponse'
+      summary: deleteProductImageById
+      tags:
+      - Product Image
+  /api/product-image/delete-product-image-by-name:
+    delete:
+      consumes:
+      - application/json
+      description: deleting database record by name
+      operationId: delete-product-image-by-name
+      parameters:
+      - description: Удаляет запись об изображении в базе данных по хэшу имени
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductImageByNameResponse'
+      summary: deleteProductImageByName
+      tags:
+      - Product Image
+  /api/product-image/get-image-hash-by-product-id:
+    get:
+      consumes:
+      - application/json
+      description: getting image hash by product id
+      operationId: get-image-hash-by-product-id
+      parameters:
+      - description: Получает хэш-имя изображения по его id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetImageHashByProductIdResponse'
+      summary: getImageHashByProductId
+      tags:
+      - Product Image
+  /api/product-image/update-product-image:
+    put:
+      consumes:
+      - application/json
+      description: updating database record
+      operationId: update-product-image
+      parameters:
+      - description: Обновляет запись об изображении в базе данных по id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateProductImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductImageResponse'
+      summary: updateProductImage
+      tags:
+      - Product Image
+  /api/product/create-product:
+    post:
+      consumes:
+      - application/json
+      description: creating product
+      operationId: create-product
+      parameters:
+      - description: Создаёт товар
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.CreateProductResponse'
+      summary: createProduct
+      tags:
+      - Product
+  /api/product/delete-product:
+    delete:
+      consumes:
+      - application/json
+      description: deleting product by id
+      operationId: delete-product
+      parameters:
+      - description: Удаляет товар по айди
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.DeleteProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.DeleteProductResponse'
+      summary: deleteProduct
+      tags:
+      - Product
+  /api/product/get-all-by-brand:
+    get:
+      consumes:
+      - application/json
+      description: getting all products by brand
+      operationId: get-all-by-brand
+      parameters:
+      - description: Получает все товары по названию бренда
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetAllByBrandRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByBrandResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByBrandResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByBrandResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByBrandResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByBrandResponse'
+      summary: getAllByBrand
+      tags:
+      - Product
+  /api/product/get-all-by-category:
+    get:
+      consumes:
+      - application/json
+      description: get all products by category
+      operationId: get-all-by-category
+      parameters:
+      - description: Получает все товары по категории
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetAllByCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByCategoryResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByCategoryResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByCategoryResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByCategoryResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByCategoryResponse'
+      summary: getAllByCategory
+      tags:
+      - Product
+  /api/product/get-all-by-name:
+    get:
+      consumes:
+      - application/json
+      description: getting all products by name
+      operationId: get-all-by-name
+      parameters:
+      - description: Получает все товары по названию товара
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetAllByNameRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByNameResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByNameResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByNameResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByNameResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetAllByNameResponse'
+      summary: getAllByName
+      tags:
+      - Product
+  /api/product/get-product:
+    get:
+      consumes:
+      - application/json
+      description: getting product
+      operationId: get-product
+      parameters:
+      - description: получает товар по айди
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.GetProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetProductResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.GetProductResponse'
+      summary: getProduct
+      tags:
+      - Product
+  /api/product/update-product:
+    put:
+      consumes:
+      - application/json
+      description: updating product by id
+      operationId: update-product
+      parameters:
+      - description: Обновляет товар по айди
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/backend_internal_types.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateProductResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateProductResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateProductResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/backend_internal_types.UpdateProductResponse'
+      summary: updateProduct
+      tags:
+      - Product
+  /api/user/get-username-by-id:
+    post:
+      consumes:
+      - application/json
+      description: get username by user id
+      operationId: get-username-by-id
+      parameters:
+      - description: Возвращает имя пользователя по user id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.GetUsernameByIdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_routes.GetUsernameByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_routes.GetUsernameByIdResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_routes.GetUsernameByIdResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_routes.GetUsernameByIdResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/internal_routes.GetUsernameByIdResponse'
+      summary: getUsernameById
+      tags:
+      - User
+  /stream/chat/send-message:
+    post:
+      consumes:
+      - application/json
+      description: Отправка сообщения в чат
+      operationId: send-message
+      parameters:
+      - description: Информация для авторизации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_routes.SendMessageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Успешная отправка сообщения
+          schema:
+            $ref: '#/definitions/internal_routes.SendMessageResponse'
+        "400":
+          description: Ошибка запроса
+          schema:
+            $ref: '#/definitions/internal_routes.SendMessageResponse'
+        "401":
+          description: Неверные учетные данные
+          schema:
+            $ref: '#/definitions/internal_routes.SendMessageResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/internal_routes.SendMessageResponse'
+      summary: sendMessage
+      tags:
+      - Chat
 securityDefinitions:
   ApiKeyAuth:
     in: header
