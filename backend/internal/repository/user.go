@@ -22,7 +22,7 @@ func (r *UsersRepo) CreateUser(user domain.User) (int64, error) {
 	if err := r.db.Create(&user).Error; err != nil {
 		return 0, err
 	}
-	return user.ID, nil // Assuming domain.User has an ID field
+	return user.Id, nil // Assuming domain.User has an ID field
 }
 
 func (r *UsersRepo) GetUserByUsername(username, password string) (domain.User, error) {
@@ -37,7 +37,7 @@ func (r *UsersRepo) GetUserByEmail(email, password string) (domain.User, error) 
 	return user, err
 }
 
-func (r *UsersRepo) GetUsernameByID(id int64) (string, error) {
+func (r *UsersRepo) GetUsernameById(id int64) (string, error) {
 	var username string
 	err := r.db.Model(&domain.User{}).Where("id = ?", id).Pluck("username", &username).Error
 	return username, err

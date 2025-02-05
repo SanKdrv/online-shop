@@ -10,8 +10,8 @@ type SendMessageRequest struct {
 
 type MessageRequest struct {
 	Message string `json:"message"`
-	UserID  int64  `json:"user_id"`
-	ChatID  int64  `json:"chat_id,string"`
+	UserId  int64  `json:"user_id"`
+	ChatId  int64  `json:"chat_id,string"`
 }
 
 type SendMessageResponse struct {

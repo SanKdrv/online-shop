@@ -32,7 +32,7 @@ func (s *UsersService) GenerateToken(username, password string) (string, error) 
 		return "", err
 	}
 	claimsAccess := jwt.MapClaims{
-		"user_id": user.ID,
+		"user_id": user.Id,
 		"exp":     time.Now().Add(tokenTTL).Unix(),
 		"iat":     time.Now().Unix(),
 	}
@@ -106,6 +106,6 @@ func (s *UsersService) VerifyUser(identifier, password, verifyBy string) (domain
 	return user, nil // User verified
 }
 
-func (s *UsersService) GetUsernameByID(userID int64) (string, error) {
-	return s.repo.GetUsernameByID(userID)
+func (s *UsersService) GetUsernameByID(userId int64) (string, error) {
+	return s.repo.GetUsernameById(userId)
 }

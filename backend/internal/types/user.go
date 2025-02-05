@@ -3,7 +3,7 @@ package types
 import "time"
 
 type Request struct {
-	ID         int64     `json:"id"`
+	Id         int64     `json:"id"`
 	Username   string    `json:"username"`
 	Name       string    `json:"name"`
 	GoogleName string    `json:"googleName,omitempty"`
@@ -45,10 +45,10 @@ type Response struct {
 	Error        string `json:"error,omitempty"`
 }
 
-type GetUsernameByIDRequest struct {
-	UserID int64 `json:"user_id"`
+type GetUsernameByIdRequest struct {
+	UserId int64 `json:"user_id"`
 }
 
-type GetUsernameByIDResponse struct {
+type GetUsernameByIdResponse struct {
 	Username string `json:"username"`
 }

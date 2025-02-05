@@ -58,10 +58,10 @@ func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Param input body types.GetProductRequest true "получает товар по айди"
-// @Success 200 {object} types.getProductResponse
-// @Failure 400,404 {object} types.getProductResponse
-// @Failure 500 {object} types.getProductResponse
-// @Failure default {object} types.getProductResponse
+// @Success 200 {object} types.GetProductResponse
+// @Failure 400,404 {object} types.GetProductResponse
+// @Failure 500 {object} types.GetProductResponse
+// @Failure default {object} types.GetProductResponse
 // @Router /api/product/get-product [get]
 func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

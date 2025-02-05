@@ -21,8 +21,8 @@ type SignUpRequest = types.SignUpRequest
 type SignOutRequest = types.SignOutRequest
 type Response = types.Response
 
-type GetUsernameByIDRequest = types.GetUsernameByIDRequest
-type GetUsernameByIDResponse = types.GetUsernameByIDResponse
+type GetUsernameByIdRequest = types.GetUsernameByIdRequest
+type GetUsernameByIdResponse = types.GetUsernameByIdResponse
 
 // TODO: добавить разлогинирование при появлении более 5 различных подключений одного пользователя
 // @Summary Sign In
@@ -100,7 +100,7 @@ func (h *Handler) signIn(log *slog.Logger, cfg *config.Config) http.HandlerFunc 
 		//sess, err := h.services.RefreshSession.CreateRefreshSession(user)
 		refreshSession := domain.RefreshSession{
 			//ID:
-			UserID:       user.ID,
+			UserId:       user.Id,
 			RefreshToken: uuid.New().String(),
 			UserAgent:    req.UserAgent,
 			ExpiresIn:    time.Now().Add(cfg.Auth.RefreshTokenTTL).Unix(),
@@ -121,7 +121,7 @@ func (h *Handler) signIn(log *slog.Logger, cfg *config.Config) http.HandlerFunc 
 	}
 }
 
-// @Summary SignUp
+// @Summary signUp
 // @Tags Auth
 // @Description create account
 // @ID create-account
@@ -266,42 +266,42 @@ func (h *Handler) signOut(log *slog.Logger) http.HandlerFunc {
 	}
 }
 
-// @Summary GetUsernameByID
+// @Summary getUsernameById
 // @Tags User
 // @Description get username by user id
 // @ID get-username-by-id
 // @Accept  json
 // @Produce  json
-// @Param input body GetUsernameByIDRequest true "Возвращает имя пользователя по user id"
-// @Success 200 {object} GetUsernameByIDResponse
-// @Failure 400,404 {object} GetUsernameByIDResponse
-// @Failure 500 {object} GetUsernameByIDResponse
-// @Failure default {object} GetUsernameByIDResponse
+// @Param input body GetUsernameByIdRequest true "Возвращает имя пользователя по user id"
+// @Success 200 {object} GetUsernameByIdResponse
+// @Failure 400,404 {object} GetUsernameByIdResponse
+// @Failure 500 {object} GetUsernameByIdResponse
+// @Failure default {object} GetUsernameByIdResponse
 // @Router /api/user/get-username-by-id [post]
-func (h *Handler) getUsernameByID(log *slog.Logger) http.HandlerFunc {
+func (h *Handler) getUsernameById(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const op = "routes.user.getUsernameByID"
+		const op = "routes.user.getUsernameById"
 
 		log = log.With(
 			slog.String("op", op),
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req GetUsernameByIDRequest
+		var req GetUsernameByIdRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			log.Error("failed to decode request body", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Invalid request body"))
 			return
 		}
 
-		username, err := h.services.Users.GetUsernameByID(req.UserID)
+		username, err := h.services.Users.GetUsernameByID(req.UserId)
 		if err != nil {
 			log.Error("failed to get username by id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
 			return
 		}
 
-		render.JSON(w, r, GetUsernameByIDResponse{
+		render.JSON(w, r, GetUsernameByIdResponse{
 			Username: username,
 		})
 	}

@@ -27,8 +27,8 @@ func ServeWebSocket(hub *Hub, w http.ResponseWriter, r *http.Request, services *
 	}
 
 	// Получаем chatId из URL (например, ws://localhost:8082/stream/chat/ws?chatId=123)
-	chatID := r.URL.Query().Get("chatId")
-	if chatID == "" {
+	chatId := r.URL.Query().Get("chatId")
+	if chatId == "" {
 		slog.Error("chatId отсутствует в запросе")
 		err := conn.Close()
 		if err != nil {
@@ -41,7 +41,7 @@ func ServeWebSocket(hub *Hub, w http.ResponseWriter, r *http.Request, services *
 	client := &Client{
 		Conn:   conn,
 		Send:   make(chan []byte, 256),
-		ChatID: chatID,
+		ChatId: chatId,
 	}
 
 	hub.Register <- client
@@ -77,8 +77,8 @@ func (c *Client) readPump(hub *Hub, services *service.Service) {
 		// Создание нормализованного сообщения с данными из запроса
 		normalizedMessage := domain.Message{
 			Message:     msgRequest.Message,
-			ChatOwnerID: msgRequest.ChatID,
-			UserID:      msgRequest.UserID,
+			ChatOwnerId: msgRequest.ChatId,
+			UserId:      msgRequest.UserId,
 		}
 
 		if err := services.WebSocket.SendMessage(normalizedMessage); err != nil {

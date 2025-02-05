@@ -12,7 +12,7 @@ import (
 type Client struct {
 	Conn   *websocket.Conn
 	Send   chan []byte
-	ChatID string
+	ChatId string
 }
 
 // Hub управляет всеми активными WebSocket-соединениями
@@ -38,22 +38,22 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.Register:
 			// Если чата ещё нет, создаём его
-			if _, exists := h.Clients[client.ChatID]; !exists {
-				h.Clients[client.ChatID] = make(map[*Client]bool)
+			if _, exists := h.Clients[client.ChatId]; !exists {
+				h.Clients[client.ChatId] = make(map[*Client]bool)
 			}
 			// Добавляем клиента в соответствующий чат
-			h.Clients[client.ChatID][client] = true
-			slog.Info("Client connected to chat", slog.String("chatId", client.ChatID))
+			h.Clients[client.ChatId][client] = true
+			slog.Info("Client connected to chat", slog.String("chatId", client.ChatId))
 
 		case client := <-h.Unregister:
-			if clients, exists := h.Clients[client.ChatID]; exists {
+			if clients, exists := h.Clients[client.ChatId]; exists {
 				delete(clients, client)
 				close(client.Send) // Закрываем канал
 				if len(clients) == 0 {
-					delete(h.Clients, client.ChatID) // Удаляем чат, если в нём больше нет клиентов
+					delete(h.Clients, client.ChatId) // Удаляем чат, если в нём больше нет клиентов
 				}
 			}
-			slog.Info("Client disconnected from chat", slog.String("chatId", client.ChatID))
+			slog.Info("Client disconnected from chat", slog.String("chatId", client.ChatId))
 
 		case message := <-h.Broadcast:
 			var msgRequest MessageRequest
@@ -62,7 +62,7 @@ func (h *Hub) Run() {
 				continue
 			}
 
-			chatID := msgRequest.ChatID
+			chatID := msgRequest.ChatId
 
 			if clients, exists := h.Clients[strconv.FormatInt(chatID, 10)]; exists {
 				for client := range clients {

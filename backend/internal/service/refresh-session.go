@@ -28,7 +28,7 @@ func (s *RefreshSessionService) CreateRefreshSession(user domain.User, obj domai
 	} else {
 		//access := domain.AccessToken{}
 		claimsAccess := jwt.MapClaims{
-			"user_id": user.ID,
+			"user_id": user.Id,
 			"exp":     time.Now().Add(cfg.Auth.AccessTokenTTL).Unix(),
 			"iat":     time.Now().Unix(),
 		}
@@ -51,14 +51,14 @@ func (s *RefreshSessionService) UpdateRefreshSession(refreshToken domain.Refresh
 	} else {
 		if refreshSession.ExpiresIn > time.Now().Unix() {
 			// Создает новую рефреш-сессию и записывает ее в БД
-			newRefrefreshSession := domain.RefreshSession{
-				UserID:       refreshSession.UserID,
+			newRefreshSession := domain.RefreshSession{
+				UserId:       refreshSession.UserId,
 				RefreshToken: uuid.New().String(),
 				UserAgent:    req.UserAgent,
 				ExpiresIn:    time.Now().Add(time.Minute * cfg.Auth.RefreshTokenTTL).Unix(),
 				CreatedAt:    time.Now(),
 			}
-			if session, err := s.repo.CreateRefreshSession(newRefrefreshSession); err != nil {
+			if session, err := s.repo.CreateRefreshSession(newRefreshSession); err != nil {
 				slog.Info("service failed to create refresh session", slog.String("error", err.Error()))
 				return domain.AccessToken{}, domain.RefreshToken{}, err
 			} else {
@@ -70,7 +70,7 @@ func (s *RefreshSessionService) UpdateRefreshSession(refreshToken domain.Refresh
 				// Создаёт access_token
 				claimsAccess := jwt.MapClaims{
 					// Возьмём user_id из рефреш-сессии
-					"user_id": session.UserID,
+					"user_id": session.UserId,
 					"exp":     time.Now().Add(cfg.Auth.AccessTokenTTL).Unix(),
 					"iat":     time.Now().Unix(),
 				}

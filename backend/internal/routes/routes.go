@@ -42,7 +42,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// User
 		r.Route("/user", func(r chi.Router) {
-			r.Post("/get-username-by-id", h.getUsernameByID(log))
+			r.Post("/get-username-by-id", h.getUsernameById(log))
 		})
 
 		// Brand
@@ -84,7 +84,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 	router.Route("/stream/", func(r chi.Router) {
 		r.Route("/chat/", func(r chi.Router) {
-			r.Post("/send-message", h.sendMessage(log, cfg))
+			r.Post("/send-message", h.sendMessage(log))
 			r.Get("/ws", func(w http.ResponseWriter, r *http.Request) {
 				websocket.ServeWebSocket(h.hub, w, r, h.services)
 			})
