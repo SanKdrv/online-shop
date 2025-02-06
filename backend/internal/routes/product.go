@@ -58,9 +58,9 @@ func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 // @ID get-product
 // @Accept  json
 // @Produce  json
-// @Param product_name formData string true "Название товара"
-// @Param brand_id formData int64 true "ID бренда"
-// @Param category_id formData int64 true "ID категории"
+// @Param product_name query string true "Название товара"
+// @Param brand_id query int64 true "ID бренда"
+// @Param category_id query int64 true "ID категории"
 // @Success 200 {object} types.GetProductResponse
 // @Failure 400,404 {object} types.GetProductResponse
 // @Failure 500 {object} types.GetProductResponse
@@ -75,14 +75,14 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		productName := r.FormValue("product_name")
+		productName := r.URL.Query().Get("product_name")
 		if productName == "" {
 			log.Error("missed product_name", slog.String("error", "missed product_name"))
 			render.JSON(w, r, response.Error("Missed product_name"))
 			return
 		}
 
-		brandIdStr := r.FormValue("brand_id")
+		brandIdStr := r.URL.Query().Get("brand_id")
 		if brandIdStr == "" {
 			log.Error("missed brand_id", slog.String("error", "missed brand_id"))
 			render.JSON(w, r, response.Error("Missed brand_id"))
@@ -96,7 +96,7 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		categoryIdStr := r.FormValue("category_id")
+		categoryIdStr := r.URL.Query().Get("category_id")
 		if brandIdStr == "" {
 			log.Error("missed category_id", slog.String("error", "missed category_id"))
 			render.JSON(w, r, response.Error("Missed category_id"))
@@ -129,7 +129,7 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-category
 // @Accept  json
 // @Produce  json
-// @Param category_id formData int64 true "ID категории"
+// @Param category_id query int64 true "ID категории"
 // @Success 200 {object} types.GetAllByCategoryResponse
 // @Failure 400,404 {object} types.GetAllByCategoryResponse
 // @Failure 500 {object} types.GetAllByCategoryResponse
@@ -144,7 +144,7 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		categoryIdStr := r.FormValue("category_id")
+		categoryIdStr := r.URL.Query().Get("category_id")
 		if categoryIdStr == "" {
 			log.Error("missed category_id", slog.String("error", "missing category_id"))
 			render.JSON(w, r, response.Error("missed category_id"))
@@ -177,7 +177,7 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-name
 // @Accept  json
 // @Produce  json
-// @Param product_name formData string true "Название товара"
+// @Param product_name query string true "Название товара"
 // @Success 200 {object} types.GetAllByNameResponse
 // @Failure 400,404 {object} types.GetAllByNameResponse
 // @Failure 500 {object} types.GetAllByNameResponse
@@ -192,7 +192,7 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		productName := r.FormValue("product_name")
+		productName := r.URL.Query().Get("product_name")
 		if productName == "" {
 			log.Error("missing product_name", slog.String("error", "missing product_name"))
 			render.JSON(w, r, response.Error("missing product_name"))

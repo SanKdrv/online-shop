@@ -23,7 +23,7 @@ import (
 // @ID get-image-hash-by-product-id
 // @Accept  json
 // @Produce  json
-// @Param product_id formData int64 true "ID продукта"
+// @Param product_id query int64 true "ID продукта"
 // @Success 200 {object} types.GetImageHashByProductIdResponse
 // @Failure 400,404 {object} types.GetImageHashByProductIdResponse
 // @Failure 500 {object} types.GetImageHashByProductIdResponse
@@ -38,7 +38,7 @@ func (h *Handler) getImageHashByProductId(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		productIdStr := r.FormValue("product_id")
+		productIdStr := r.URL.Query().Get("product_id")
 		if productIdStr == "" {
 			log.Error("missing product_id", slog.String("error", "missing product_id"))
 			render.JSON(w, r, response.Error("Missing product_id"))

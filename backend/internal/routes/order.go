@@ -58,7 +58,7 @@ func (h *Handler) createOrder(log *slog.Logger) http.HandlerFunc {
 // @ID get-order-by-id
 // @Accept  json
 // @Produce  json
-// @Param category_id formData int64 true "ID категории"
+// @Param category_id query int64 true "ID категории"
 // @Success 200 {object} types.GetOrderByIdResponse
 // @Failure 400,404 {object} types.GetOrderByIdResponse
 // @Failure 500 {object} types.GetOrderByIdResponse
@@ -74,7 +74,7 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 		)
 
 		// Получаем и конвертируем category_id в int64
-		categoryIdStr := r.FormValue("category_id")
+		categoryIdStr := r.URL.Query().Get("category_id")
 		if categoryIdStr == "" {
 			log.Error("missing category_id", slog.String("error", "missing category_id"))
 			render.JSON(w, r, response.Error("Missing category_id"))
@@ -107,7 +107,7 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 // @ID get-orders-by-user-id
 // @Accept  json
 // @Produce  json
-// @Param user_id formData int64 true "ID пользователя"
+// @Param user_id query int64 true "ID пользователя"
 // @Success 200 {object} types.GetOrdersByUserIdResponse
 // @Failure 400,404 {object} types.GetOrdersByUserIdResponse
 // @Failure 500 {object} types.GetOrdersByUserIdResponse
@@ -123,7 +123,7 @@ func (h *Handler) getOrdersByUserId(log *slog.Logger) http.HandlerFunc {
 		)
 
 		// Получаем и конвертируем user_id в int64
-		userIdStr := r.FormValue("user_id")
+		userIdStr := r.URL.Query().Get("user_id")
 		if userIdStr == "" {
 			log.Error("missing user_id", slog.String("error", "missing user_id"))
 			render.JSON(w, r, response.Error("Missing user_id"))

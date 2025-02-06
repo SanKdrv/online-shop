@@ -17,7 +17,7 @@ import (
 // @ID get-category-id-by-category-name
 // @Accept  json
 // @Produce  json
-// @Param category_name formData string true "Название категории"
+// @Param category_name query string true "Название категории"
 // @Success 200 {object} types.GetIdByCategoryResponse
 // @Failure 400,404 {object} types.GetIdByCategoryResponse
 // @Failure 500 {object} types.GetIdByCategoryResponse
@@ -32,7 +32,7 @@ func (h *Handler) getIdByCategory(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		categoryName := r.FormValue("category_name")
+		categoryName := r.URL.Query().Get("category_name")
 		if categoryName == "" {
 			log.Error("category name is empty", slog.String("error", "category name is empty"))
 			render.JSON(w, r, response.Error("Category name is empty"))
@@ -58,7 +58,7 @@ func (h *Handler) getIdByCategory(log *slog.Logger) http.HandlerFunc {
 // @ID get-category-name-by-category-id
 // @Accept  json
 // @Produce  json
-// @Param category_id formData int64 true "ID категории"
+// @Param category_id query int64 true "ID категории"
 // @Success 200 {object} types.GetCategoryByIdResponse
 // @Failure 400,404 {object} types.GetCategoryByIdResponse
 // @Failure 500 {object} types.GetCategoryByIdResponse
@@ -73,7 +73,7 @@ func (h *Handler) getCategoryById(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		categoryIdStr := r.FormValue("category_id")
+		categoryIdStr := r.URL.Query().Get("category_id")
 		if categoryIdStr == "" {
 			log.Error("category id is empty", slog.String("error", "category id is empty"))
 			render.JSON(w, r, response.Error("Category id is empty"))
