@@ -99,7 +99,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 			r.Delete("/delete-product-image-by-id", h.deleteProductImageById(log))
 		})
 
-		//r.Use(middleware.UserIdentity(log, cfg)) // Пример мидлвэра аутентификации
+		//r.Use(middleware.UserIdentity(log, cfg)) // Пример middleware аутентификации
 	})
 
 	router.Route("/stream/", func(r chi.Router) {

@@ -3,7 +3,11 @@ package types
 import "backend/internal/domain"
 
 type CreateProductRequest struct {
-	Product domain.Product `json:"product"`
+	Description string  `json:"description"`
+	Name        string  `json:"name"`
+	Price       float64 `json:"price"`
+	BrandId     int64   `json:"brand_id"`
+	CategoryId  int64   `json:"category_id"`
 }
 
 type CreateProductResponse struct {
@@ -45,7 +49,12 @@ type GetAllByBrandResponse struct {
 }
 
 type UpdateProductRequest struct {
-	Product domain.Product `json:"product"`
+	ProductId   int64   `json:"product_id"`
+	Description string  `json:"description,omitempty"`
+	Name        string  `json:"name,omitempty"`
+	Price       float64 `json:"price,omitempty"`
+	BrandId     int64   `json:"brand_id,omitempty"`
+	CategoryId  int64   `json:"category_id,omitempty"`
 }
 
 type UpdateProductResponse struct {

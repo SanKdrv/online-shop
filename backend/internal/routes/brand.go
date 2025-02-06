@@ -75,7 +75,7 @@ func (h *Handler) getBrandById(log *slog.Logger) http.HandlerFunc {
 
 		brandId, err := strconv.ParseInt(r.URL.Query().Get("brand_id"), 10, 64)
 		if err != nil {
-			log.Error("missing brand_id in query params")
+			log.Error("missing brand_id in query params", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Missing brand_id parameter"))
 			return
 		}

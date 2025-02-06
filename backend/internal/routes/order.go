@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+	"strconv"
 )
 
 // @Summary createOrder
@@ -57,7 +58,7 @@ func (h *Handler) createOrder(log *slog.Logger) http.HandlerFunc {
 // @ID get-order-by-id
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetOrderByIdRequest true "Ищет заказ по id"
+// @Param category_id formData int64 true "ID категории"
 // @Success 200 {object} types.GetOrderByIdResponse
 // @Failure 400,404 {object} types.GetOrderByIdResponse
 // @Failure 500 {object} types.GetOrderByIdResponse
@@ -72,14 +73,22 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetOrderByIdRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		// Получаем и конвертируем category_id в int64
+		categoryIdStr := r.FormValue("category_id")
+		if categoryIdStr == "" {
+			log.Error("missing category_id", slog.String("error", "missing category_id"))
+			render.JSON(w, r, response.Error("Missing category_id"))
 			return
 		}
 
-		order, err := h.services.Orders.GetOrderById(req.CategoryId)
+		categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+		if err != nil {
+			log.Error("invalid category_id", slog.String("error", "invalid category_id"))
+			render.JSON(w, r, response.Error("Invalid category_id"))
+			return
+		}
+
+		order, err := h.services.Orders.GetOrderById(categoryId)
 		if err != nil {
 			log.Error("failed to get order by order id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -98,7 +107,7 @@ func (h *Handler) getOrderById(log *slog.Logger) http.HandlerFunc {
 // @ID get-orders-by-user-id
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetOrdersByUserIdRequest true "Ищет все заказы по айди пользователя"
+// @Param user_id formData int64 true "ID пользователя"
 // @Success 200 {object} types.GetOrdersByUserIdResponse
 // @Failure 400,404 {object} types.GetOrdersByUserIdResponse
 // @Failure 500 {object} types.GetOrdersByUserIdResponse
@@ -113,14 +122,22 @@ func (h *Handler) getOrdersByUserId(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetOrdersByUserIdRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		// Получаем и конвертируем user_id в int64
+		userIdStr := r.FormValue("user_id")
+		if userIdStr == "" {
+			log.Error("missing user_id", slog.String("error", "missing user_id"))
+			render.JSON(w, r, response.Error("Missing user_id"))
 			return
 		}
 
-		orders, err := h.services.Orders.GetOrdersByUserId(req.UserId)
+		userId, err := strconv.ParseInt(userIdStr, 10, 64)
+		if err != nil {
+			log.Error("invalid user_id", slog.String("error", "invalid user_id"))
+			render.JSON(w, r, response.Error("Invalid user_id"))
+			return
+		}
+
+		orders, err := h.services.Orders.GetOrdersByUserId(userId)
 		if err != nil {
 			log.Error("failed to get orders by user id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

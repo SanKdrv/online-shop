@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+	"strconv"
 )
 
 // @Summary createProduct
@@ -38,7 +39,7 @@ func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		productId, err := h.services.Products.CreateProduct(req.Product)
+		productId, err := h.services.Products.CreateProduct(req.Description, req.Name, req.Price, req.CategoryId, req.BrandId)
 		if err != nil {
 			log.Error("failed to create product", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -57,7 +58,9 @@ func (h *Handler) createProduct(log *slog.Logger) http.HandlerFunc {
 // @ID get-product
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetProductRequest true "получает товар по айди"
+// @Param product_name formData string true "Название товара"
+// @Param brand_id formData int64 true "ID бренда"
+// @Param category_id formData int64 true "ID категории"
 // @Success 200 {object} types.GetProductResponse
 // @Failure 400,404 {object} types.GetProductResponse
 // @Failure 500 {object} types.GetProductResponse
@@ -72,14 +75,42 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetProductRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		productName := r.FormValue("product_name")
+		if productName == "" {
+			log.Error("missed product_name", slog.String("error", "missed product_name"))
+			render.JSON(w, r, response.Error("Missed product_name"))
 			return
 		}
 
-		product, err := h.services.Products.Get(req.Name, req.BrandId, req.CategoryId)
+		brandIdStr := r.FormValue("brand_id")
+		if brandIdStr == "" {
+			log.Error("missed brand_id", slog.String("error", "missed brand_id"))
+			render.JSON(w, r, response.Error("Missed brand_id"))
+			return
+		}
+
+		brandId, err := strconv.ParseInt(brandIdStr, 10, 64)
+		if err != nil {
+			log.Error("invalid brand_id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("invalid brand_id"))
+			return
+		}
+
+		categoryIdStr := r.FormValue("category_id")
+		if brandIdStr == "" {
+			log.Error("missed category_id", slog.String("error", "missed category_id"))
+			render.JSON(w, r, response.Error("Missed category_id"))
+			return
+		}
+
+		categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+		if err != nil {
+			log.Error("invalid category_id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("invalid category_id"))
+			return
+		}
+
+		product, err := h.services.Products.Get(productName, brandId, categoryId)
 		if err != nil {
 			log.Error("failed to get product", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -98,7 +129,7 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-category
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetAllByCategoryRequest true "Получает все товары по категории"
+// @Param category_id formData int64 true "ID категории"
 // @Success 200 {object} types.GetAllByCategoryResponse
 // @Failure 400,404 {object} types.GetAllByCategoryResponse
 // @Failure 500 {object} types.GetAllByCategoryResponse
@@ -113,14 +144,21 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetAllByCategoryRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		categoryIdStr := r.FormValue("category_id")
+		if categoryIdStr == "" {
+			log.Error("missed category_id", slog.String("error", "missing category_id"))
+			render.JSON(w, r, response.Error("missed category_id"))
 			return
 		}
 
-		products, err := h.services.Products.GetAllByCategory(req.CategoryId)
+		categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+		if err != nil {
+			log.Error("invalid category_id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("invalid category_id"))
+			return
+		}
+
+		products, err := h.services.Products.GetAllByCategory(categoryId)
 		if err != nil {
 			log.Error("failed to get products by category id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -139,7 +177,7 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-name
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetAllByNameRequest true "Получает все товары по названию товара"
+// @Param product_name formData string true "Название товара"
 // @Success 200 {object} types.GetAllByNameResponse
 // @Failure 400,404 {object} types.GetAllByNameResponse
 // @Failure 500 {object} types.GetAllByNameResponse
@@ -154,14 +192,14 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetAllByNameRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		productName := r.FormValue("product_name")
+		if productName == "" {
+			log.Error("missing product_name", slog.String("error", "missing product_name"))
+			render.JSON(w, r, response.Error("missing product_name"))
 			return
 		}
 
-		products, err := h.services.Products.GetAllByName(req.ProductName)
+		products, err := h.services.Products.GetAllByName(productName)
 		if err != nil {
 			log.Error("failed to find products by name", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -180,7 +218,7 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-brand
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetAllByBrandRequest true "Получает все товары по названию бренда"
+// @Param brand_id formData int64 true "ID бренда"
 // @Success 200 {object} types.GetAllByBrandResponse
 // @Failure 400,404 {object} types.GetAllByBrandResponse
 // @Failure 500 {object} types.GetAllByBrandResponse
@@ -195,14 +233,21 @@ func (h *Handler) getAllByBrand(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetAllByBrandRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		userIdStr := r.FormValue("brand_id")
+		if userIdStr == "" {
+			log.Error("missing brand_id", slog.String("error", "missing brand_id"))
+			render.JSON(w, r, response.Error("Missing brand_id"))
 			return
 		}
 
-		products, err := h.services.Products.GetAllByBrand(req.BrandId)
+		userId, err := strconv.ParseInt(userIdStr, 10, 64)
+		if err != nil {
+			log.Error("wrong brand_id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Invalid brand_id"))
+			return
+		}
+
+		products, err := h.services.Products.GetAllByBrand(userId)
 		if err != nil {
 			log.Error("failed to find products by brand", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -243,7 +288,7 @@ func (h *Handler) updateProduct(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		err := h.services.Products.UpdateProduct(req.Product)
+		err := h.services.Products.UpdateProductById(req.ProductId, req.Description, req.Name, req.Price, req.CategoryId, req.BrandId)
 		if err != nil {
 			log.Error("failed to update product", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

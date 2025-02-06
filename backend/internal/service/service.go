@@ -41,18 +41,18 @@ type Brands interface {
 }
 
 type Products interface {
-	CreateProduct(product domain.Product) (int64, error)
+	CreateProduct(description string, name string, price float64, categoryId int64, brandId int64) (int64, error)
 	Get(name string, brandId int64, categoryId int64) (domain.Product, error)
 	GetAllByCategory(categoryId int64) ([]domain.Product, error)
 	GetAllByName(name string) ([]domain.Product, error)
 	GetAllByBrand(brandId int64) ([]domain.Product, error)
-	UpdateProduct(product domain.Product) error
+	UpdateProductById(productId int64, description string, name string, price float64, categoryId int64, brandId int64) error
 	DeleteProduct(productId int64) error
 }
 
 type ProductsImages interface {
 	GetImageHashByProductId(productId int64) (string, error)
-	CreateProductImage(productImage domain.ProductImage) (int64, error)
+	CreateProductImage(productId int64, hashString string) (int64, error)
 	UpdateProductImage(oldName string, productImage domain.ProductImage) error
 	DeleteProductImageByName(name string) error
 	DeleteProductImageById(imageId int64) error

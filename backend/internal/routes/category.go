@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+	"strconv"
 )
 
 // @Summary getIdByCategory
@@ -16,7 +17,7 @@ import (
 // @ID get-category-id-by-category-name
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetIdByCategoryRequest true "Возвращает id категории по названию"
+// @Param category_name formData string true "Название категории"
 // @Success 200 {object} types.GetIdByCategoryResponse
 // @Failure 400,404 {object} types.GetIdByCategoryResponse
 // @Failure 500 {object} types.GetIdByCategoryResponse
@@ -31,14 +32,14 @@ func (h *Handler) getIdByCategory(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetIdByCategoryRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		categoryName := r.FormValue("category_name")
+		if categoryName == "" {
+			log.Error("category name is empty", slog.String("error", "category name is empty"))
+			render.JSON(w, r, response.Error("Category name is empty"))
 			return
 		}
 
-		categoryId, err := h.services.Categories.GetIdByCategory(req.CategoryName)
+		categoryId, err := h.services.Categories.GetIdByCategory(categoryName)
 		if err != nil {
 			log.Error("failed to get category name by id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -57,7 +58,7 @@ func (h *Handler) getIdByCategory(log *slog.Logger) http.HandlerFunc {
 // @ID get-category-name-by-category-id
 // @Accept  json
 // @Produce  json
-// @Param input body types.GetCategoryByIdRequest true "Возвращает название категории по id"
+// @Param category_id formData int64 true "ID категории"
 // @Success 200 {object} types.GetCategoryByIdResponse
 // @Failure 400,404 {object} types.GetCategoryByIdResponse
 // @Failure 500 {object} types.GetCategoryByIdResponse
@@ -72,14 +73,21 @@ func (h *Handler) getCategoryById(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.GetCategoryByIdRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		categoryIdStr := r.FormValue("category_id")
+		if categoryIdStr == "" {
+			log.Error("category id is empty", slog.String("error", "category id is empty"))
+			render.JSON(w, r, response.Error("Category id is empty"))
 			return
 		}
 
-		categoryName, err := h.services.Categories.GetCategoryById(req.CategoryId)
+		categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+		if err != nil {
+			log.Error("failed to parse category id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Invalid category id"))
+			return
+		}
+
+		categoryName, err := h.services.Categories.GetCategoryById(categoryId)
 		if err != nil {
 			log.Error("failed to get category id by name", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

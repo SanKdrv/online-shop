@@ -3,6 +3,7 @@ package service
 import (
 	"backend/internal/domain"
 	"backend/internal/repository"
+	"time"
 )
 
 type ProductsImagesService struct {
@@ -17,7 +18,13 @@ func (s *ProductsImagesService) GetImageHashByProductId(productId int64) (string
 	return s.repo.GetImageHashByProductId(productId)
 }
 
-func (s *ProductsImagesService) CreateProductImage(productImage domain.ProductImage) (int64, error) {
+func (s *ProductsImagesService) CreateProductImage(productId int64, hashString string) (int64, error) {
+	var productImage = domain.ProductImage{
+		ProductId: productId,
+		ImageHash: hashString,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
 	return s.repo.CreateProductImage(productImage)
 }
 
