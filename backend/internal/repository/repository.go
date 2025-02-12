@@ -44,7 +44,7 @@ type Products interface {
 }
 
 type ProductsImages interface {
-	GetImageHashByProductId(productId int64) (string, error)
+	GetImageHashesByProductId(productId int64) ([]string, error)
 	CreateProductImage(productImage domain.ProductImage) (int64, error)
 	UpdateProductImage(oldName string, productImage domain.ProductImage) error
 	DeleteProductImageByName(name string) error

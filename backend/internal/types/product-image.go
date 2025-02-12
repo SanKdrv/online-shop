@@ -7,7 +7,7 @@ type GetImageHashByProductIdRequest struct {
 }
 
 type GetImageHashByProductIdResponse struct {
-	Hash string `json:"hash"`
+	Hashes []string `json:"hash"`
 }
 
 type CreateProductImageRequest struct {

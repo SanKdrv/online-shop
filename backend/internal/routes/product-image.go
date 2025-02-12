@@ -17,10 +17,51 @@ import (
 	"strconv"
 )
 
-// @Summary getImageHashByProductId
+// @Summary getImageByHash
 // @Tags Product Image
-// @Description getting image hash by product id
-// @ID get-image-hash-by-product-id
+// @Description get image file by image hashName
+// @ID get-image-by-hash
+// @Accept json
+// @Produce image/jpeg
+// @Param hash_name query string true "Название изображения (Хеш)"
+// @Success 200 {file} binary "Image file"
+// @Failure 400 {object} response.ErrorResponse "Ошибка валидации (например, отсутствует hash_name)"
+// @Failure 404 {object} response.ErrorResponse "Изображение не найдено"
+// @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
+// @Router /api/product-image/get-image-by-hash [get]
+func (h *Handler) getImageByHash(log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "routes.product-image.getImageByHash"
+		log = log.With(
+			slog.String("op", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		hashName := r.URL.Query().Get("hash_name")
+		if hashName == "" {
+			log.Error("missing hash_name", slog.String("error", "missing hash_name"))
+			return
+		}
+
+		imagePath := "uploads/" + hashName
+		if _, err := os.Stat(imagePath); os.IsNotExist(err) {
+			log.Error("file not found", slog.String("hash_name", hashName))
+			http.Error(w, "File not found", http.StatusNotFound)
+			return
+		}
+
+		// Определяем Content-Type
+		w.Header().Set("Content-Type", "image/jpeg") // Можно улучшить, используя `http.DetectContentType`
+
+		// Отправляем файл
+		http.ServeFile(w, r, imagePath)
+	}
+}
+
+// @Summary getImagesByProductId
+// @Tags Product Image
+// @Description getting images by product id
+// @ID get-images-by-product-id
 // @Accept  json
 // @Produce  json
 // @Param product_id query int64 true "ID продукта"
@@ -28,8 +69,8 @@ import (
 // @Failure 400,404 {object} types.GetImageHashByProductIdResponse
 // @Failure 500 {object} types.GetImageHashByProductIdResponse
 // @Failure default {object} types.GetImageHashByProductIdResponse
-// @Router /api/product-image/get-image-hash-by-product-id [get]
-func (h *Handler) getImageHashByProductId(log *slog.Logger) http.HandlerFunc {
+// @Router /api/product-image/get-images-by-product-id [get]
+func (h *Handler) getImagesByProductId(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "routes.product-image.getImageHashByProductId"
 
@@ -52,15 +93,18 @@ func (h *Handler) getImageHashByProductId(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		hash, err := h.services.ProductsImages.GetImageHashByProductId(productId)
+		hashes, err := h.services.ProductsImages.GetImageHashesByProductId(productId)
 		if err != nil {
 			log.Error("failed to get image hash", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
 			return
 		}
 
+		//for i := 0; i < len(hashes); i++ {
+		//	http.ServeFile(w, r, "uploads/"+hashes[i])
+		//}
 		render.JSON(w, r, types.GetImageHashByProductIdResponse{
-			Hash: hash,
+			Hashes: hashes,
 		})
 	}
 }
