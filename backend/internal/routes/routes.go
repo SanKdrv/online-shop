@@ -93,7 +93,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 		// ProductImage
 		r.Route("/product-image", func(r chi.Router) {
 			r.Get("/get-image-by-hash", h.getImageByHash(log))
-			r.Get("/get-image-hash-by-product-id", h.getImagesByProductId(log))
+			r.Get("/get-images-by-product-id", h.getImagesByProductId(log))
 			r.Post("/create-product-image", h.createProductImage(log))
 			r.Put("/update-product-image", h.updateProductImage(log))
 			r.Delete("/delete-product-image-by-name", h.deleteProductImageByName(log))

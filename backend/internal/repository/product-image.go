@@ -15,6 +15,22 @@ func NewProductsImagesRepo(db *gorm.DB) *ProductsImagesRepo {
 	}
 }
 
+func (r *ProductsImagesRepo) GetImageIdByHash(imageHash string) (int64, error) {
+	var imgId int64
+	if err := r.db.Model(&domain.ProductImage{}).Where("image_hash = ?", imageHash).Pluck("id", imgId).Error; err != nil {
+		return 0, err
+	}
+	return imgId, nil
+}
+
+func (r *ProductsImagesRepo) GetImageHashByImageId(imageId int64) (string, error) {
+	var hash string
+	if err := r.db.Model(&domain.ProductImage{}).Where("id = ?", imageId).Pluck("image_hash", &hash).Error; err != nil {
+		return "", err
+	}
+	return hash, nil
+}
+
 func (r *ProductsImagesRepo) GetImageHashesByProductId(productId int64) ([]string, error) {
 	var hashes []string
 	if err := r.db.Model(&domain.ProductImage{}).Where("product_id = ?", productId).Pluck("image_hash", &hashes).Error; err != nil {

@@ -25,9 +25,9 @@ import (
 // @Produce image/jpeg
 // @Param hash_name query string true "Название изображения (Хеш)"
 // @Success 200 {file} binary "Image file"
-// @Failure 400 {object} response.ErrorResponse "Ошибка валидации (например, отсутствует hash_name)"
-// @Failure 404 {object} response.ErrorResponse "Изображение не найдено"
-// @Failure 500 {object} response.ErrorResponse "Внутренняя ошибка сервера"
+// @Failure 400 {object} string "Ошибка валидации (например, отсутствует hash_name)"
+// @Failure 404 {object} string "Изображение не найдено"
+// @Failure 500 {object} string "Внутренняя ошибка сервера"
 // @Router /api/product-image/get-image-by-hash [get]
 func (h *Handler) getImageByHash(log *slog.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -47,6 +47,7 @@ func (h *Handler) getImageByHash(log *slog.Logger) http.HandlerFunc {
 		if _, err := os.Stat(imagePath); os.IsNotExist(err) {
 			log.Error("file not found", slog.String("hash_name", hashName))
 			http.Error(w, "File not found", http.StatusNotFound)
+			//w.Write()
 			return
 		}
 
@@ -200,7 +201,7 @@ func (h *Handler) createProductImage(log *slog.Logger) http.HandlerFunc {
 		}
 
 		// Записываем product_id и хеш изображения в БД
-		recordId, err := h.services.ProductsImages.CreateProductImage(productId, hashString)
+		recordId, err := h.services.ProductsImages.CreateProductImage(productId, fileName)
 		if err != nil {
 			log.Error("failed to create record", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -283,7 +284,14 @@ func (h *Handler) deleteProductImageByName(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		err := h.services.ProductsImages.DeleteProductImageByName(req.OldHashName)
+		err := os.Remove("uploads/" + req.OldHashName)
+		if err != nil {
+			log.Error("failed delete file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		err = h.services.ProductsImages.DeleteProductImageByName(req.OldHashName)
 		if err != nil {
 			log.Error("failed delete record by hash name", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -324,7 +332,21 @@ func (h *Handler) deleteProductImageById(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		err := h.services.ProductsImages.DeleteProductImageById(req.ImageId)
+		imageName, err := h.services.ProductsImages.GetImageHashByImageId(req.ImageId)
+		if err != nil {
+			log.Error("failed find image name by image id", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error")) // TODO код ошибки
+			return
+		}
+
+		err = os.Remove("uploads/" + imageName)
+		if err != nil {
+			log.Error("failed delete file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		err = h.services.ProductsImages.DeleteProductImageById(req.ImageId)
 		if err != nil {
 			log.Error("failed delete record by record id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

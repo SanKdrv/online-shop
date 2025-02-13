@@ -14,6 +14,13 @@ func NewProductsImagesService(repo repository.ProductsImages) *ProductsImagesSer
 	return &ProductsImagesService{repo: repo}
 }
 
+func (s *ProductsImagesService) GetImageIdByHash(imageHash string) (int64, error) {
+	return s.repo.GetImageIdByHash(imageHash)
+}
+func (s *ProductsImagesService) GetImageHashByImageId(imageId int64) (string, error) {
+	return s.repo.GetImageHashByImageId(imageId)
+}
+
 func (s *ProductsImagesService) GetImageHashesByProductId(productId int64) ([]string, error) {
 	return s.repo.GetImageHashesByProductId(productId)
 }
