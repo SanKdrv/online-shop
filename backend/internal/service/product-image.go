@@ -36,11 +36,11 @@ func (s *ProductsImagesService) CreateProductImage(productId int64, hashString s
 		return 0, err
 	}
 	var productImage = domain.ProductImage{
-		ProductId: productId,
-		Order:     maxOrder + 1,
-		ImageHash: hashString,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		ProductId:  productId,
+		ImageOrder: maxOrder + 1,
+		ImageHash:  hashString,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
 	}
 	return s.repo.CreateProductImage(productImage)
 }

@@ -6,10 +6,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"io"
 	"log/slog"
+	"math/rand"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -184,6 +186,14 @@ func (h *Handler) createProductImage(log *slog.Logger) http.HandlerFunc {
 		fileName := hashString + fileExt
 		filePath := filepath.Join("uploads", fileName)
 
+		// Проверяем, существует ли файл с таким именем
+		if _, err := os.Stat(filePath); err == nil {
+			// Если файл уже существует, добавляем случайный суффикс
+			randSuffix := rand.Intn(10000)
+			fileName = fmt.Sprintf("%s_%d%s", hashString, randSuffix, fileExt)
+			filePath = filepath.Join("uploads", fileName)
+		}
+
 		// Создаём директорию, если её нет
 		err = os.MkdirAll("uploads", os.ModePerm)
 		if err != nil {
@@ -205,6 +215,12 @@ func (h *Handler) createProductImage(log *slog.Logger) http.HandlerFunc {
 		if err != nil {
 			log.Error("failed to create record", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
+			err1 := os.Remove("uploads/" + fileName)
+			if err1 != nil {
+				log.Error("failed delete file", slog.String("error", err.Error()))
+				render.JSON(w, r, response.Error("Internal server error"))
+				return
+			}
 			return
 		}
 
@@ -237,12 +253,6 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		//var req types.UpdateProductImageRequest
-		//if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		//	log.Error("failed to decode request body", slog.String("error", err.Error()))
-		//	render.JSON(w, r, response.Error("Invalid request body"))
-		//	return
-		//}
 		var oldHashName = r.FormValue("old_hash_name")
 		if oldHashName == "" {
 			log.Error("missing old_hash_name", slog.String("error", "missing old_hash_name"))
@@ -250,13 +260,20 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		//if err := h.services.ProductsImages.DeleteProductImageByName(oldHashName); err != nil {
-		//	log.Error("can't delete from ProductImage table by old_hash_name", slog.String("error", "can't delete from ProductImage table by old_hash_name"))
-		//	render.JSON(w, r, response.Error("can't delete from ProductImage table by old_hash_name"))
+		err := os.Remove("uploads/" + oldHashName)
+		if err != nil {
+			log.Error("failed delete file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		//err = h.services.ProductsImages.DeleteProductImageByName(oldHashName)
+		//if err != nil {
+		//	log.Error("failed delete record by hash name", slog.String("error", err.Error()))
+		//	render.JSON(w, r, response.Error("Internal server error"))
 		//	return
 		//}
 
-		// Получаем файл
 		file, header, err := r.FormFile("image")
 		if err != nil {
 			log.Error("failed to get file", slog.String("error", err.Error()))
@@ -270,7 +287,6 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			}
 		}(file)
 
-		// Читаем содержимое файла для хеширования
 		fileBytes, err := io.ReadAll(file)
 		if err != nil {
 			log.Error("failed to read file", slog.String("error", err.Error()))
@@ -278,16 +294,19 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		// Генерируем SHA256 хеш файла
 		hash := sha256.Sum256(fileBytes)
 		hashString := hex.EncodeToString(hash[:])
 
-		// Генерируем путь для сохранения файла
 		fileExt := filepath.Ext(header.Filename)
 		fileName := hashString + fileExt
 		filePath := filepath.Join("uploads", fileName)
 
-		// Создаём директорию, если её нет
+		if _, err := os.Stat(filePath); err == nil {
+			randSuffix := rand.Intn(10000)
+			fileName = fmt.Sprintf("%s_%d%s", hashString, randSuffix, fileExt)
+			filePath = filepath.Join("uploads", fileName)
+		}
+
 		err = os.MkdirAll("uploads", os.ModePerm)
 		if err != nil {
 			log.Error("failed to create upload directory", slog.String("error", err.Error()))
@@ -295,7 +314,6 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		// Сохраняем файл на сервере
 		err = os.WriteFile(filePath, fileBytes, 0644)
 		if err != nil {
 			log.Error("failed to save file", slog.String("error", err.Error()))

@@ -218,7 +218,7 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 // @ID get-all-by-brand
 // @Accept  json
 // @Produce  json
-// @Param brand_id formData int64 true "ID бренда"
+// @Param brand_id query int64 true "ID бренда"
 // @Success 200 {object} types.GetAllByBrandResponse
 // @Failure 400,404 {object} types.GetAllByBrandResponse
 // @Failure 500 {object} types.GetAllByBrandResponse
@@ -233,21 +233,21 @@ func (h *Handler) getAllByBrand(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		userIdStr := r.FormValue("brand_id")
-		if userIdStr == "" {
+		brandIdStr := r.URL.Query().Get("brand_id")
+		if brandIdStr == "" {
 			log.Error("missing brand_id", slog.String("error", "missing brand_id"))
 			render.JSON(w, r, response.Error("Missing brand_id"))
 			return
 		}
 
-		userId, err := strconv.ParseInt(userIdStr, 10, 64)
+		brandId, err := strconv.ParseInt(brandIdStr, 10, 64)
 		if err != nil {
 			log.Error("wrong brand_id", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Invalid brand_id"))
 			return
 		}
 
-		products, err := h.services.Products.GetAllByBrand(userId)
+		products, err := h.services.Products.GetAllByBrand(brandId)
 		if err != nil {
 			log.Error("failed to find products by brand", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
