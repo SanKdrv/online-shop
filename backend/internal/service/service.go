@@ -51,11 +51,12 @@ type Products interface {
 }
 
 type ProductsImages interface {
+	GetSequenceByProductId(productId int64) (int64, error)
 	GetImageIdByHash(imageHash string) (int64, error)
 	GetImageHashByImageId(imageId int64) (string, error)
 	GetImageHashesByProductId(productId int64) ([]string, error)
 	CreateProductImage(productId int64, hashString string) (int64, error)
-	UpdateProductImage(oldName string, productImage domain.ProductImage) error
+	UpdateProductImage(oldName string, newName string) error
 	DeleteProductImageByName(name string) error
 	DeleteProductImageById(imageId int64) error
 }

@@ -48,7 +48,7 @@ func main() {
 		Username: cfg.DB.Username,
 		DBName:   cfg.DB.DBName,
 		SSLMode:  cfg.DB.SSLMode,
-		Password: cfg.DB.Password, // TODO: убрать в env
+		Password: cfg.DB.Password,
 	})
 	if err != nil {
 		log.Error("cannot connect to database:", slog.String("error", err.Error()))

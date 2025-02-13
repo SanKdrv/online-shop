@@ -4,6 +4,7 @@ import "time"
 
 type ProductImage struct {
 	Id        int64     `db:"id" json:"id,omitempty"`
+	Order     int64     `db:"order" json:"order,omitempty"`
 	ProductId int64     `db:"product_id" json:"product_id,omitempty"`
 	ImageHash string    `db:"image_hash" json:"image_hash,omitempty"`
 	CreatedAt time.Time `db:"created_at" json:"created_at,omitempty"`

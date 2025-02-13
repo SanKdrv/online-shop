@@ -15,7 +15,6 @@ func NewProductsRepo(db *gorm.DB) *ProductsRepo {
 	}
 }
 
-// CreateProduct TODO: Проверить
 func (r *ProductsRepo) CreateProduct(product domain.Product) (int64, error) {
 	if err := r.db.Create(&product).Error; err != nil {
 		return 0, err

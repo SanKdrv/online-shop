@@ -1,6 +1,7 @@
 CREATE TABLE products_images
 (
     "id"         SERIAL PRIMARY KEY,
+    "order" INT DEFAULT 0,
     "product_id" INT NOT NULL,
     "image_hash" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP DEFAULT NOW(),

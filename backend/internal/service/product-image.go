@@ -14,9 +14,14 @@ func NewProductsImagesService(repo repository.ProductsImages) *ProductsImagesSer
 	return &ProductsImagesService{repo: repo}
 }
 
+func (s *ProductsImagesService) GetSequenceByProductId(productId int64) (int64, error) {
+	return s.repo.GetSequenceByProductId(productId)
+}
+
 func (s *ProductsImagesService) GetImageIdByHash(imageHash string) (int64, error) {
 	return s.repo.GetImageIdByHash(imageHash)
 }
+
 func (s *ProductsImagesService) GetImageHashByImageId(imageId int64) (string, error) {
 	return s.repo.GetImageHashByImageId(imageId)
 }
@@ -26,8 +31,13 @@ func (s *ProductsImagesService) GetImageHashesByProductId(productId int64) ([]st
 }
 
 func (s *ProductsImagesService) CreateProductImage(productId int64, hashString string) (int64, error) {
+	maxOrder, err := s.repo.GetSequenceByProductId(productId)
+	if err != nil {
+		return 0, err
+	}
 	var productImage = domain.ProductImage{
 		ProductId: productId,
+		Order:     maxOrder + 1,
 		ImageHash: hashString,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
@@ -35,8 +45,8 @@ func (s *ProductsImagesService) CreateProductImage(productId int64, hashString s
 	return s.repo.CreateProductImage(productImage)
 }
 
-func (s *ProductsImagesService) UpdateProductImage(oldName string, productImage domain.ProductImage) error {
-	return s.repo.UpdateProductImage(oldName, productImage)
+func (s *ProductsImagesService) UpdateProductImage(oldName string, newName string) error {
+	return s.repo.UpdateProductImage(oldName, newName)
 }
 
 func (s *ProductsImagesService) DeleteProductImageByName(name string) error {

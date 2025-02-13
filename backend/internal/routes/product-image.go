@@ -219,9 +219,10 @@ func (h *Handler) createProductImage(log *slog.Logger) http.HandlerFunc {
 // @Tags Product Image
 // @Description updating database record
 // @ID update-product-image
-// @Accept  json
+// @Accept  multipart/form-data
 // @Produce  json
-// @Param input body types.CreateProductImageRequest true "Обновляет запись об изображении в базе данных по id"
+// @Param old_hash_name formData string true "Название старого изображения"
+// @Param image formData file true "Файл изображения"
 // @Success 200 {object} types.CreateProductImageResponse
 // @Failure 400,404 {object} types.CreateProductImageResponse
 // @Failure 500 {object} types.CreateProductImageResponse
@@ -236,14 +237,73 @@ func (h *Handler) updateProductImage(log *slog.Logger) http.HandlerFunc {
 			slog.String("request_id", middleware.GetReqID(r.Context())),
 		)
 
-		var req types.UpdateProductImageRequest
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			log.Error("failed to decode request body", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Invalid request body"))
+		//var req types.UpdateProductImageRequest
+		//if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		//	log.Error("failed to decode request body", slog.String("error", err.Error()))
+		//	render.JSON(w, r, response.Error("Invalid request body"))
+		//	return
+		//}
+		var oldHashName = r.FormValue("old_hash_name")
+		if oldHashName == "" {
+			log.Error("missing old_hash_name", slog.String("error", "missing old_hash_name"))
+			render.JSON(w, r, response.Error("missing old_hash_name"))
 			return
 		}
 
-		err := h.services.ProductsImages.UpdateProductImage(req.OldHashName, req.ProductImage)
+		//if err := h.services.ProductsImages.DeleteProductImageByName(oldHashName); err != nil {
+		//	log.Error("can't delete from ProductImage table by old_hash_name", slog.String("error", "can't delete from ProductImage table by old_hash_name"))
+		//	render.JSON(w, r, response.Error("can't delete from ProductImage table by old_hash_name"))
+		//	return
+		//}
+
+		// Получаем файл
+		file, header, err := r.FormFile("image")
+		if err != nil {
+			log.Error("failed to get file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Failed to retrieve image file"))
+			return
+		}
+		defer func(file multipart.File) {
+			err := file.Close()
+			if err != nil {
+				log.Error("failed to close file", slog.String("error", err.Error()))
+			}
+		}(file)
+
+		// Читаем содержимое файла для хеширования
+		fileBytes, err := io.ReadAll(file)
+		if err != nil {
+			log.Error("failed to read file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Failed to read image file"))
+			return
+		}
+
+		// Генерируем SHA256 хеш файла
+		hash := sha256.Sum256(fileBytes)
+		hashString := hex.EncodeToString(hash[:])
+
+		// Генерируем путь для сохранения файла
+		fileExt := filepath.Ext(header.Filename)
+		fileName := hashString + fileExt
+		filePath := filepath.Join("uploads", fileName)
+
+		// Создаём директорию, если её нет
+		err = os.MkdirAll("uploads", os.ModePerm)
+		if err != nil {
+			log.Error("failed to create upload directory", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Failed to create upload directory"))
+			return
+		}
+
+		// Сохраняем файл на сервере
+		err = os.WriteFile(filePath, fileBytes, 0644)
+		if err != nil {
+			log.Error("failed to save file", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Failed to save image file"))
+			return
+		}
+
+		err = h.services.ProductsImages.UpdateProductImage(oldHashName, fileName)
 		if err != nil {
 			log.Error("failed update record", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -335,7 +395,7 @@ func (h *Handler) deleteProductImageById(log *slog.Logger) http.HandlerFunc {
 		imageName, err := h.services.ProductsImages.GetImageHashByImageId(req.ImageId)
 		if err != nil {
 			log.Error("failed find image name by image id", slog.String("error", err.Error()))
-			render.JSON(w, r, response.Error("Internal server error")) // TODO код ошибки
+			render.JSON(w, r, response.Error("Internal server error"))
 			return
 		}
 
