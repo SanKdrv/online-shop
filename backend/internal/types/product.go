@@ -30,6 +30,8 @@ type GetAllByCategoryRequest struct {
 
 type GetAllByCategoryResponse struct {
 	Products []domain.Product `json:"products"`
+	Page     int              `json:"page,omitempty"`
+	Limit    int              `json:"limit,omitempty"`
 }
 
 type GetAllByNameRequest struct {
@@ -38,6 +40,8 @@ type GetAllByNameRequest struct {
 
 type GetAllByNameResponse struct {
 	Products []domain.Product `json:"products"`
+	Page     int              `json:"page,omitempty"`
+	Limit    int              `json:"limit,omitempty"`
 }
 
 type GetAllByBrandRequest struct {

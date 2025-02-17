@@ -36,9 +36,9 @@ type Brands interface {
 type Products interface {
 	CreateProduct(product domain.Product) (int64, error)
 	Get(name string, brandId int64, categoryId int64) (domain.Product, error)
-	GetAllByCategory(categoryId int64) ([]domain.Product, error)
-	GetAllByName(name string) ([]domain.Product, error)
-	GetAllByBrand(brandId int64) ([]domain.Product, error)
+	GetAllByCategoryPaginated(categoryId int64, page int, limit int) ([]domain.Product, error)
+	GetAllByNamePaginated(name string, page int, limit int) ([]domain.Product, error)
+	GetAllByBrandPaginated(brandId int64, page int, limit int) ([]domain.Product, error)
 	UpdateProduct(product domain.Product) error
 	DeleteProduct(productID int64) error
 }

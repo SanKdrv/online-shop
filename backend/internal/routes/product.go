@@ -130,6 +130,8 @@ func (h *Handler) getProduct(log *slog.Logger) http.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Param category_id query int64 true "ID категории"
+// @Param page query int false "Номер страницы"
+// @Param limit query int false "Количество элементов на странице"
 // @Success 200 {object} types.GetAllByCategoryResponse
 // @Failure 400,404 {object} types.GetAllByCategoryResponse
 // @Failure 500 {object} types.GetAllByCategoryResponse
@@ -158,15 +160,43 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		products, err := h.services.Products.GetAllByCategory(categoryId)
+		pageStr := r.URL.Query().Get("page")
+		limitStr := r.URL.Query().Get("limit")
+
+		page := 1
+		limit := 10
+
+		if pageStr != "" {
+			p, err := strconv.Atoi(pageStr)
+			if err != nil || p < 1 {
+				log.Error("invalid page", slog.String("error", "invalid page parameter"))
+				render.JSON(w, r, response.Error("invalid page parameter"))
+				return
+			}
+			page = p
+		}
+
+		if limitStr != "" {
+			l, err := strconv.Atoi(limitStr)
+			if err != nil || l < 1 {
+				log.Error("invalid limit", slog.String("error", "invalid limit parameter"))
+				render.JSON(w, r, response.Error("invalid limit parameter"))
+				return
+			}
+			limit = l
+		}
+
+		products, err := h.services.Products.GetAllByCategoryPaginated(categoryId, page, limit)
 		if err != nil {
-			log.Error("failed to get products by category id", slog.String("error", err.Error()))
+			log.Error("failed to get products", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
 			return
 		}
 
 		render.JSON(w, r, types.GetAllByCategoryResponse{
 			Products: products,
+			Page:     page,
+			Limit:    limit,
 		})
 	}
 }
@@ -178,6 +208,8 @@ func (h *Handler) getAllByCategory(log *slog.Logger) http.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Param product_name query string true "Название товара"
+// @Param page query int false "Номер страницы"
+// @Param limit query int false "Количество элементов на странице"
 // @Success 200 {object} types.GetAllByNameResponse
 // @Failure 400,404 {object} types.GetAllByNameResponse
 // @Failure 500 {object} types.GetAllByNameResponse
@@ -199,7 +231,34 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		products, err := h.services.Products.GetAllByName(productName)
+		// Обработка параметров пагинации
+		pageStr := r.URL.Query().Get("page")
+		limitStr := r.URL.Query().Get("limit")
+
+		page := 1
+		limit := 10
+
+		if pageStr != "" {
+			p, err := strconv.Atoi(pageStr)
+			if err != nil || p < 1 {
+				log.Error("invalid page", slog.String("error", "invalid page parameter"))
+				render.JSON(w, r, response.Error("invalid page parameter"))
+				return
+			}
+			page = p
+		}
+
+		if limitStr != "" {
+			l, err := strconv.Atoi(limitStr)
+			if err != nil || l < 1 {
+				log.Error("invalid limit", slog.String("error", "invalid limit parameter"))
+				render.JSON(w, r, response.Error("invalid limit parameter"))
+				return
+			}
+			limit = l
+		}
+
+		products, err := h.services.Products.GetAllByNamePaginated(productName, page, limit)
 		if err != nil {
 			log.Error("failed to find products by name", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))
@@ -208,6 +267,8 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 
 		render.JSON(w, r, types.GetAllByNameResponse{
 			Products: products,
+			Page:     page,
+			Limit:    limit,
 		})
 	}
 }
@@ -219,6 +280,8 @@ func (h *Handler) getAllByName(log *slog.Logger) http.HandlerFunc {
 // @Accept  json
 // @Produce  json
 // @Param brand_id query int64 true "ID бренда"
+// @Param page query int false "Номер страницы"
+// @Param limit query int false "Количество элементов на странице"
 // @Success 200 {object} types.GetAllByBrandResponse
 // @Failure 400,404 {object} types.GetAllByBrandResponse
 // @Failure 500 {object} types.GetAllByBrandResponse
@@ -247,7 +310,33 @@ func (h *Handler) getAllByBrand(log *slog.Logger) http.HandlerFunc {
 			return
 		}
 
-		products, err := h.services.Products.GetAllByBrand(brandId)
+		pageStr := r.URL.Query().Get("page")
+		limitStr := r.URL.Query().Get("limit")
+
+		page := 1
+		limit := 10
+
+		if pageStr != "" {
+			p, err := strconv.Atoi(pageStr)
+			if err != nil || p < 1 {
+				log.Error("invalid page", slog.String("error", "invalid page parameter"))
+				render.JSON(w, r, response.Error("invalid page parameter"))
+				return
+			}
+			page = p
+		}
+
+		if limitStr != "" {
+			l, err := strconv.Atoi(limitStr)
+			if err != nil || l < 1 {
+				log.Error("invalid limit", slog.String("error", "invalid limit parameter"))
+				render.JSON(w, r, response.Error("invalid limit parameter"))
+				return
+			}
+			limit = l
+		}
+
+		products, err := h.services.Products.GetAllByBrandPaginated(brandId, page, limit)
 		if err != nil {
 			log.Error("failed to find products by brand", slog.String("error", err.Error()))
 			render.JSON(w, r, response.Error("Internal server error"))

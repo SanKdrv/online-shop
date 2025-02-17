@@ -31,25 +31,42 @@ func (r *ProductsRepo) Get(name string, brandId int64, categoryId int64) (domain
 	return product, nil
 }
 
-func (r *ProductsRepo) GetAllByCategory(categoryId int64) ([]domain.Product, error) {
+func (r *ProductsRepo) GetAllByCategoryPaginated(categoryId int64, page int, limit int) ([]domain.Product, error) {
 	var products []domain.Product
-	if err := r.db.Model(&domain.Product{}).Where("category_id = ?", categoryId).Find(&products).Error; err != nil {
+	offset := (page - 1) * limit
+
+	if err := r.db.Model(&domain.Product{}).
+		Where("category_id = ?", categoryId).
+		Limit(limit).
+		Offset(offset).
+		Find(&products).Error; err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}
+
+func (r *ProductsRepo) GetAllByNamePaginated(name string, page int, limit int) ([]domain.Product, error) {
+	var products []domain.Product
+	offset := (page - 1) * limit
+
+	if err := r.db.Model(&domain.Product{}).Where("name = ?", name).
+		Limit(limit).
+		Offset(offset).
+		Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil
 }
 
-func (r *ProductsRepo) GetAllByName(name string) ([]domain.Product, error) {
+func (r *ProductsRepo) GetAllByBrandPaginated(brandId int64, page int, limit int) ([]domain.Product, error) {
 	var products []domain.Product
-	if err := r.db.Model(&domain.Product{}).Where("name = ?", name).Find(&products).Error; err != nil {
-		return nil, err
-	}
-	return products, nil
-}
+	offset := (page - 1) * limit
 
-func (r *ProductsRepo) GetAllByBrand(brandId int64) ([]domain.Product, error) {
-	var products []domain.Product
-	if err := r.db.Model(&domain.Product{}).Where("brand_id = ?", brandId).Find(&products).Error; err != nil {
+	if err := r.db.Model(&domain.Product{}).Where("brand_id = ?", brandId).
+		Limit(limit).
+		Offset(offset).
+		Find(&products).Error; err != nil {
 		return nil, err
 	}
 	return products, nil

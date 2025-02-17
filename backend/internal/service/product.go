@@ -31,16 +31,16 @@ func (s *ProductsService) Get(name string, brandId int64, categoryId int64) (dom
 	return s.repo.Get(name, brandId, categoryId)
 }
 
-func (s *ProductsService) GetAllByCategory(categoryId int64) ([]domain.Product, error) {
-	return s.repo.GetAllByCategory(categoryId)
+func (s *ProductsService) GetAllByCategoryPaginated(categoryId int64, page int, limit int) ([]domain.Product, error) {
+	return s.repo.GetAllByCategoryPaginated(categoryId, page, limit)
 }
 
-func (s *ProductsService) GetAllByName(name string) ([]domain.Product, error) {
-	return s.repo.GetAllByName(name)
+func (s *ProductsService) GetAllByNamePaginated(name string, page int, limit int) ([]domain.Product, error) {
+	return s.repo.GetAllByNamePaginated(name, page, limit)
 }
 
-func (s *ProductsService) GetAllByBrand(brandId int64) ([]domain.Product, error) {
-	return s.repo.GetAllByBrand(brandId)
+func (s *ProductsService) GetAllByBrandPaginated(brandId int64, page int, limit int) ([]domain.Product, error) {
+	return s.repo.GetAllByBrandPaginated(brandId, page, limit)
 }
 
 func (s *ProductsService) UpdateProductById(productId int64, description string, name string, price float64, categoryId int64, brandId int64) error {
