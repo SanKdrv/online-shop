@@ -68,6 +68,14 @@ type OrdersContent interface {
 	DeleteOrderContent(orderContentId int64) error
 }
 
+type CartsContent interface {
+	GetCartContentById(id int64) (domain.CartContent, error)
+	GetCartContentByUserId(userId int64) ([]domain.CartContent, error)
+	CreateCartContent(cartContent domain.CartContent) (int64, error)
+	UpdateCartContent(cartContent domain.CartContent) error
+	DeleteCartContent(cartContentId int64) error
+}
+
 type WebSocket interface {
 	CreateMessage(message domain.Message) error
 }
@@ -82,6 +90,7 @@ type Repositories struct {
 	ProductsImages ProductsImages
 	Orders         Orders
 	OrdersContent  OrdersContent
+	CartsContent   CartsContent
 }
 
 func NewRepositories(db *gorm.DB) *Repositories {
@@ -95,5 +104,6 @@ func NewRepositories(db *gorm.DB) *Repositories {
 		ProductsImages: NewProductsImagesRepo(db),
 		Orders:         NewOrdersRepo(db),
 		OrdersContent:  NewOrdersContentRepo(db),
+		CartsContent:   NewCartsContentRepo(db),
 	}
 }

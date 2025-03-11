@@ -100,6 +100,14 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 			r.Delete("/delete-product-image-by-id", h.deleteProductImageById(log))
 		})
 
+		r.Route("/cart-content", func(r chi.Router) {
+			r.Get("/get-cart-content-by-id", h.getCartContentById(log))
+			r.Get("/get-cart-content-by-user-id", h.getCartContentByUserId(log))
+			r.Post("/create-cart-content", h.createCartContent(log))
+			r.Put("/update-cart-content", h.updateCartContent(log))
+			r.Delete("/delete-cart-content", h.deleteCartContent(log))
+		})
+
 		//r.Use(middleware.UserIdentity(log, cfg)) // Пример middleware аутентификации
 	})
 

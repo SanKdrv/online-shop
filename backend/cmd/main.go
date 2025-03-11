@@ -24,9 +24,9 @@ const (
 	envProd = "prod"
 )
 
-// @title           Stream Service Prototype API
-// @version         1.0
-// @description     API server for stream service application
+// @title           Online shop
+// @version         0.1
+// @description     API server for online shop application
 
 // @host      localhost:8082
 // @BasePath  /
@@ -65,7 +65,7 @@ func main() {
 
 	// Настройка CORS middleware
 	corsMiddleware := cors.New(cors.Options{
-		AllowedOrigins:   cfg.CorsOrigin, // Разрешаем фронтенд на порту 3000
+		AllowedOrigins:   cfg.CorsOrigin, // Разрешаем фронтенд на порту ...
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,

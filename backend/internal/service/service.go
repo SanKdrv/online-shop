@@ -76,6 +76,14 @@ type OrdersContent interface {
 	DeleteOrderContent(orderContentId int64) error
 }
 
+type CartsContent interface {
+	GetCartContentById(id int64) (domain.CartContent, error)
+	GetCartContentByUserId(userId int64) ([]domain.CartContent, error)
+	CreateCartContent(cartContent domain.CartContent) (int64, error)
+	UpdateCartContent(cartContent domain.CartContent) error
+	DeleteCartContent(cartContentId int64) error
+}
+
 type WebSocket interface {
 	SendMessage(message domain.Message) error
 }
@@ -90,6 +98,7 @@ type Service struct {
 	ProductsImages ProductsImages
 	Orders         Orders
 	OrdersContent  OrdersContent
+	CartsContent   CartsContent
 }
 
 func NewService(repos *repository.Repositories) *Service {
@@ -103,5 +112,6 @@ func NewService(repos *repository.Repositories) *Service {
 		ProductsImages: NewProductsImagesService(repos.ProductsImages),
 		Orders:         NewOrdersService(repos.Orders),
 		OrdersContent:  NewOrdersContentService(repos.OrdersContent),
+		CartsContent:   NewCartsContentService(repos.CartsContent),
 	}
 }
