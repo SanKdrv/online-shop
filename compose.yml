@@ -1,33 +1,22 @@
 services:
+
 #  frontend:
-#    env_file: .env.dev
+#    env_file:
+#      - .env.dev
 #    build:
 #      context: ./frontend
 #      args:
 #        NGINX_CONF: ${NGINX_CONF}
 #    ports:
-#      - '80:80'
-#      - "443:443"
+#      - "80:80"
 #    volumes:
+#      - .:/app
+#      - /app/node_modules
 #      - ./frontend/ssl:/etc/nginx/ssl
-
-  frontend:
-    env_file:
-      - .env.dev
-    build:
-      context: ./frontend
-      args:
-        NGINX_CONF: ${NGINX_CONF}
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - ./frontend/ssl:/etc/nginx/ssl
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    depends_on:
-      - backend
+#    environment:
+#      - CHOKIDAR_USEPOLLING=true
+#    depends_on:
+#      - backend
 
   backend:
     env_file:

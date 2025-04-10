@@ -1,11 +1,11 @@
 # Используем официальный образ Node.js
-FROM node:18
+FROM node:18 AS build
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
 # Копируем package.json и package-lock.json
-COPY package*.json ./
+COPY ./package*.json ./frontend/
 
 # Устанавливаем зависимости
 RUN npm install
@@ -15,15 +15,6 @@ COPY . .
 
 # Собираем приложение
 RUN npm run build
-
-# Указываем порт, который будет использовать приложение
-EXPOSE 3000
-#
-## Запускаем приложение
-#CMD ["npm", "start"]
-
-# Build the React application in production mode
-RUN npm start
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
@@ -37,8 +28,8 @@ COPY ./ssl /etc/nginx/ssl/
 COPY ${NGINX_CONF} /etc/nginx/conf.d/default.conf
 
 # Copy the built Angular app files to the Nginx HTML folder
-COPY --from=build /usr/src/app/dist/frontend/browser /usr/share/nginx/html
-COPY --from=build /usr/src/app/девфлов.рф /etc/nginx/sites-available/девфлов.рф
+COPY --from=build /app/online-shop/public /usr/share/nginx/html
+#COPY --from=build /usr/src/app/девфлов.рф /etc/nginx/sites-available/девфлов.рф
 
 # Expose port 80
 EXPOSE 80 443
