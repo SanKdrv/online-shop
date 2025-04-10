@@ -1,22 +1,22 @@
 services:
 
-#  frontend:
-#    env_file:
-#      - .env.dev
-#    build:
-#      context: ./frontend
-#      args:
-#        NGINX_CONF: ${NGINX_CONF}
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - .:/app
-#      - /app/node_modules
-#      - ./frontend/ssl:/etc/nginx/ssl
-#    environment:
-#      - CHOKIDAR_USEPOLLING=true
-#    depends_on:
-#      - backend
+  frontend:
+    env_file:
+      - .env.dev
+    build:
+      context: ./frontend
+      args:
+        NGINX_CONF: ${NGINX_CONF}
+    ports:
+      - "80:80"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./frontend/ssl:/etc/nginx/ssl
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
 
   backend:
     env_file:
