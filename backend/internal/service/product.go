@@ -59,3 +59,7 @@ func (s *ProductsService) UpdateProductById(productId int64, description string,
 func (s *ProductsService) DeleteProduct(productId int64) error {
 	return s.repo.DeleteProduct(productId)
 }
+
+func (s *ProductsService) GetAll(offset int64, limit int64) ([]domain.Product, int64, error) {
+	return s.repo.GetAll(offset, limit)
+}

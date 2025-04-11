@@ -1,5 +1,7 @@
 package types
 
+import "backend/internal/domain"
+
 type GetIdByBrandRequest struct {
 	BrandName string `json:"brand_name"`
 }
@@ -39,4 +41,11 @@ type UpdateBrandRequest struct {
 
 type UpdateBrandResponse struct {
 	Status string `json:"status"`
+}
+
+type GetAllBrandsResponse struct {
+	Brands []domain.Brand `json:"brands"`
+	Total  int64          `json:"total"`
+	Offset int64          `json:"offset"`
+	Limit  int64          `json:"limit"`
 }

@@ -72,3 +72,10 @@ type DeleteProductRequest struct {
 type DeleteProductResponse struct {
 	Status string `json:"status"`
 }
+
+type GetAllProductsResponse struct {
+	Products []domain.Product `json:"products"`
+	Total    int64            `json:"total"`
+	Offset   int64            `json:"offset"`
+	Limit    int64            `json:"limit"`
+}

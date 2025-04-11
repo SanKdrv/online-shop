@@ -11,6 +11,54 @@ import (
 	"strconv"
 )
 
+// @Summary getAllCategories
+// @Tags Category
+// @Description getting all rows
+// @ID get-all-categories
+// @Accept  json
+// @Produce  json
+// @Param offset query int64 true "offset"
+// @Param limit query int64 true "limit"
+// @Success 200 {object} types.GetAllCategoriesResponse
+// @Failure 400,404 {object} types.GetAllCategoriesResponse
+// @Failure 500 {object} types.GetAllCategoriesResponse
+// @Failure default {object} types.GetAllCategoriesResponse
+// @Router /api/category/get-all-categories [get]
+func (h *Handler) getAllCategories(log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "routes.brand.getAllCategories"
+
+		log = log.With(
+			slog.String("op", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		offset, err := strconv.ParseInt(r.URL.Query().Get("offset"), 10, 64)
+		if err != nil || offset < 0 {
+			offset = 0
+		}
+
+		limit, err := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 64)
+		if err != nil || limit <= 0 {
+			limit = 10
+		}
+
+		categories, total, err := h.services.Categories.GetAll(offset, limit)
+		if err != nil {
+			log.Error("failed to get categories", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		render.JSON(w, r, types.GetAllCategoriesResponse{
+			Categories: categories,
+			Total:      total,
+			Offset:     offset,
+			Limit:      limit,
+		})
+	}
+}
+
 // @Summary getIdByCategory
 // @Tags Category
 // @Description getting category id by category name

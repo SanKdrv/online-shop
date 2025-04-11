@@ -1,6 +1,9 @@
 package service
 
-import "backend/internal/repository"
+import (
+	"backend/internal/domain"
+	"backend/internal/repository"
+)
 
 type CategoriesService struct {
 	repo repository.Categories
@@ -28,4 +31,8 @@ func (s *CategoriesService) DeleteCategory(categoryID int64) error {
 
 func (s *CategoriesService) UpdateCategory(categoryID int64, name string) error {
 	return s.repo.UpdateCategory(categoryID, name)
+}
+
+func (s *CategoriesService) GetAll(offset int64, limit int64) ([]domain.Category, int64, error) {
+	return s.repo.GetAll(offset, limit)
 }

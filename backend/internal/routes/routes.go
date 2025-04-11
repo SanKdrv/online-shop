@@ -47,7 +47,6 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// Brand
 		r.Route("/brand", func(r chi.Router) {
-            // 	TODO: getAllBrands
 			r.Get("/get-all-brands", h.getAllBrands(log))
 			r.Get("/get-id-by-brand", h.getIdByBrand(log))
 			r.Get("/get-brand-by-id", h.getBrandById(log))
@@ -58,8 +57,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// Category
 		r.Route("/category", func(r chi.Router) {
-            // 	TODO: getAllCategories
-            r.Get("/get-all-categories", h.getAllCategories(log))
+			r.Get("/get-all-categories", h.getAllCategories(log))
 			r.Get("/get-id-by-category", h.getIdByCategory(log))
 			r.Get("/get-category-by-id", h.getCategoryById(log))
 			r.Post("/create-category", h.createCategory(log))
@@ -69,8 +67,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 
 		// Order
 		r.Route("/order", func(r chi.Router) {
-            // 	TODO: getAllOrders
-            r.Get("/get-all-orders", h.getAllOrders(log))
+			r.Get("/get-all-orders", h.getAllOrders(log))
 			r.Post("/create-order", h.createOrder(log))
 			r.Get("/get-order-by-id", h.getOrderById(log))
 			r.Get("/get-orders-by-user-id", h.getOrdersByUserId(log))
@@ -88,8 +85,7 @@ func (h *Handler) RegisterRoutes(router *chi.Mux, log *slog.Logger, cfg *config.
 		// Product
 		r.Route("/product", func(r chi.Router) {
 			r.Post("/create-product", h.createProduct(log))
-            // 	TODO: getAllProducts
-            r.Get("/get-all-products", h.getAllProducts(log))
+			r.Get("/get-all-products", h.getAllProducts(log))
 			r.Get("/get-product", h.getProduct(log))
 			r.Get("/get-all-by-category", h.getAllByCategory(log))
 			r.Get("/get-all-by-name", h.getAllByName(log))

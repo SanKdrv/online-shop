@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -64,4 +65,25 @@ func (r *BrandsRepo) UpdateBrand(brandId int64, name string) error {
 	}
 
 	return nil
+}
+
+func (r *BrandsRepo) GetAll(offset int64, limit int64) ([]domain.Brand, int64, error) {
+	var brands []domain.Brand
+	var total int64
+
+	// Сначала получаем общее количество брендов
+	if err := r.db.Model(&domain.Brand{}).Count(&total).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count brands: %w", err)
+	}
+
+	// Затем получаем бренды с пагинацией
+	if err := r.db.
+		Offset(int(offset)).
+		Limit(int(limit)).
+		Find(&brands).
+		Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to get brands: %w", err)
+	}
+
+	return brands, total, nil
 }

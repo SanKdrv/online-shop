@@ -11,6 +11,54 @@ import (
 	"strconv"
 )
 
+// @Summary getAllBrands
+// @Tags Brand
+// @Description getting all rows
+// @ID get-all-brands
+// @Accept  json
+// @Produce  json
+// @Param offset query int64 true "offset"
+// @Param limit query int64 true "limit"
+// @Success 200 {object} types.GetAllBrandsResponse
+// @Failure 400,404 {object} types.GetAllBrandsResponse
+// @Failure 500 {object} types.GetAllBrandsResponse
+// @Failure default {object} types.GetAllBrandsResponse
+// @Router /api/brand/get-all-brands [get]
+func (h *Handler) getAllBrands(log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "routes.brand.getAllBrands"
+
+		log = log.With(
+			slog.String("op", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		offset, err := strconv.ParseInt(r.URL.Query().Get("offset"), 10, 64)
+		if err != nil || offset < 0 {
+			offset = 0
+		}
+
+		limit, err := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 64)
+		if err != nil || limit <= 0 {
+			limit = 10
+		}
+
+		brands, total, err := h.services.Brands.GetAll(offset, limit)
+		if err != nil {
+			log.Error("failed to get brands", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		render.JSON(w, r, types.GetAllBrandsResponse{
+			Brands: brands,
+			Total:  total,
+			Offset: offset,
+			Limit:  limit,
+		})
+	}
+}
+
 // @Summary getIdByBrand
 // @Tags Brand
 // @Description getting brand id by brand name

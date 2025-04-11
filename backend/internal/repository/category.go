@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -47,4 +48,25 @@ func (r *CategoriesRepo) DeleteCategory(categoryId int64) error {
 func (r *CategoriesRepo) UpdateCategory(categoryId int64, name string) error {
 	err := r.db.Model(&domain.Category{}).Where("id = ?", categoryId).Update("name", name).Error
 	return err
+}
+
+func (r *CategoriesRepo) GetAll(offset int64, limit int64) ([]domain.Category, int64, error) {
+	var categories []domain.Category
+	var total int64
+
+	// Сначала получаем общее количество
+	if err := r.db.Model(&domain.Category{}).Count(&total).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count categories: %w", err)
+	}
+
+	// Затем получаем rows с пагинацией
+	if err := r.db.
+		Offset(int(offset)).
+		Limit(int(limit)).
+		Find(&categories).
+		Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to get categories: %w", err)
+	}
+
+	return categories, total, nil
 }

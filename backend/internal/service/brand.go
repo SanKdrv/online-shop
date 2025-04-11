@@ -1,6 +1,9 @@
 package service
 
-import "backend/internal/repository"
+import (
+	"backend/internal/domain"
+	"backend/internal/repository"
+)
 
 type BrandsService struct {
 	repo repository.Brands
@@ -43,4 +46,11 @@ func (s *BrandsService) DeleteBrand(brandId int64) error {
 // Returns an error if the update fails or if the brand does not exist.
 func (s *BrandsService) UpdateBrand(brandId int64, name string) error {
 	return s.repo.UpdateBrand(brandId, name)
+}
+
+// GetAll getting all rows from Brands Table.
+//
+// Returns an error if the error occurred.
+func (s *BrandsService) GetAll(offset int64, limit int64) ([]domain.Brand, int64, error) {
+	return s.repo.GetAll(offset, limit)
 }

@@ -11,6 +11,54 @@ import (
 	"strconv"
 )
 
+// @Summary getAllOrders
+// @Tags Order
+// @Description getting all rows
+// @ID get-all-orders
+// @Accept  json
+// @Produce  json
+// @Param offset query int64 true "offset"
+// @Param limit query int64 true "limit"
+// @Success 200 {object} types.GetAllOrdersResponse
+// @Failure 400,404 {object} types.GetAllOrdersResponse
+// @Failure 500 {object} types.GetAllOrdersResponse
+// @Failure default {object} types.GetAllOrdersResponse
+// @Router /api/order/get-all-orders [get]
+func (h *Handler) getAllOrders(log *slog.Logger) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		const op = "routes.brand.getAllOrders"
+
+		log = log.With(
+			slog.String("op", op),
+			slog.String("request_id", middleware.GetReqID(r.Context())),
+		)
+
+		offset, err := strconv.ParseInt(r.URL.Query().Get("offset"), 10, 64)
+		if err != nil || offset < 0 {
+			offset = 0
+		}
+
+		limit, err := strconv.ParseInt(r.URL.Query().Get("limit"), 10, 64)
+		if err != nil || limit <= 0 {
+			limit = 10
+		}
+
+		orders, total, err := h.services.Orders.GetAll(offset, limit)
+		if err != nil {
+			log.Error("failed to get orders", slog.String("error", err.Error()))
+			render.JSON(w, r, response.Error("Internal server error"))
+			return
+		}
+
+		render.JSON(w, r, types.GetAllOrdersResponse{
+			Orders: orders,
+			Total:  total,
+			Offset: offset,
+			Limit:  limit,
+		})
+	}
+}
+
 // @Summary createOrder
 // @Tags Order
 // @Description creating order

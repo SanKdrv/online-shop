@@ -1,5 +1,7 @@
 package types
 
+import "backend/internal/domain"
+
 type GetIdByCategoryRequest struct {
 	CategoryName string `json:"category_name"`
 }
@@ -39,4 +41,11 @@ type UpdateCategoryRequest struct {
 
 type UpdateCategoryResponse struct {
 	Status string `json:"status"`
+}
+
+type GetAllCategoriesResponse struct {
+	Categories []domain.Category `json:"categories"`
+	Total      int64             `json:"total"`
+	Offset     int64             `json:"offset"`
+	Limit      int64             `json:"limit"`
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -79,4 +80,25 @@ func (r *ProductsRepo) UpdateProduct(product domain.Product) error {
 func (r *ProductsRepo) DeleteProduct(productId int64) error {
 	err := r.db.Delete(&domain.Product{Id: productId}).Error
 	return err
+}
+
+func (r *ProductsRepo) GetAll(offset int64, limit int64) ([]domain.Product, int64, error) {
+	var products []domain.Product
+	var total int64
+
+	// Сначала получаем общее количество
+	if err := r.db.Model(&domain.Product{}).Count(&total).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count products: %w", err)
+	}
+
+	// Затем получаем rows с пагинацией
+	if err := r.db.
+		Offset(int(offset)).
+		Limit(int(limit)).
+		Find(&products).
+		Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to get products: %w", err)
+	}
+
+	return products, total, nil
 }

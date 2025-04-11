@@ -2,6 +2,7 @@ package repository
 
 import (
 	"backend/internal/domain"
+	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -44,4 +45,25 @@ func (r *OrdersRepo) UpdateOrder(order domain.Order) error {
 
 func (r *OrdersRepo) DeleteOrder(orderId int64) error {
 	return r.db.Delete(&domain.Order{Id: orderId}).Error
+}
+
+func (r *OrdersRepo) GetAll(offset int64, limit int64) ([]domain.Order, int64, error) {
+	var orders []domain.Order
+	var total int64
+
+	// Сначала получаем общее количество
+	if err := r.db.Model(&domain.Order{}).Count(&total).Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to count orders: %w", err)
+	}
+
+	// Затем получаем rows с пагинацией
+	if err := r.db.
+		Offset(int(offset)).
+		Limit(int(limit)).
+		Find(&orders).
+		Error; err != nil {
+		return nil, 0, fmt.Errorf("failed to get orders: %w", err)
+	}
+
+	return orders, total, nil
 }

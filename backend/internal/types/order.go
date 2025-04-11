@@ -41,3 +41,10 @@ type DeleteOrderRequest struct {
 type DeleteOrderResponse struct {
 	Status string `json:"status"`
 }
+
+type GetAllOrdersResponse struct {
+	Orders []domain.Order `json:"orders"`
+	Total  int64          `json:"total"`
+	Offset int64          `json:"offset"`
+	Limit  int64          `json:"limit"`
+}

@@ -32,3 +32,7 @@ func (s *OrdersService) UpdateOrder(order domain.Order) error {
 func (s *OrdersService) DeleteOrder(orderId int64) error {
 	return s.repo.DeleteOrder(orderId)
 }
+
+func (s *OrdersService) GetAll(offset int64, limit int64) ([]domain.Order, int64, error) {
+	return s.repo.GetAll(offset, limit)
+}

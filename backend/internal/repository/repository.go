@@ -18,6 +18,7 @@ type RefreshSession interface {
 }
 
 type Categories interface {
+	GetAll(offset int64, limit int64) ([]domain.Category, int64, error)
 	GetIdByCategory(name string) (int64, error)
 	GetCategoryById(categoryId int64) (string, error)
 	CreateCategory(name string) (int64, error)
@@ -26,6 +27,7 @@ type Categories interface {
 }
 
 type Brands interface {
+	GetAll(offset int64, limit int64) ([]domain.Brand, int64, error)
 	GetIdByBrand(name string) (int64, error)
 	GetBrandById(brandId int64) (string, error)
 	CreateBrand(name string) (int64, error)
@@ -34,6 +36,7 @@ type Brands interface {
 }
 
 type Products interface {
+	GetAll(offset int64, limit int64) ([]domain.Product, int64, error)
 	CreateProduct(product domain.Product) (int64, error)
 	Get(name string, brandId int64, categoryId int64) (domain.Product, error)
 	GetAllByCategoryPaginated(categoryId int64, page int, limit int) ([]domain.Product, error)
@@ -55,6 +58,7 @@ type ProductsImages interface {
 }
 
 type Orders interface {
+	GetAll(offset int64, limit int64) ([]domain.Order, int64, error)
 	CreateOrder(order domain.Order) (int64, error)
 	GetOrderById(orderId int64) (domain.Order, error)
 	GetOrdersByUserId(userId int64) ([]domain.Order, error)
